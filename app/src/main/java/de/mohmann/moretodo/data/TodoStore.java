@@ -13,6 +13,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import de.mohmann.moretodo.fragments.TodoListFragment;
+
 /**
  * Created by mohmann on 2/3/16.
  */
@@ -27,6 +29,8 @@ public class TodoStore {
     private List<Todo> mTodoList = new ArrayList<>();
 
     private SharedPreferences mPrefs = null;
+
+    private OnTodoListUpdateListener mListener = null;
 
     private Comparator<Todo> mObjComparator = new Comparator<Todo>() {
         public int compare(Todo t1, Todo t2) {
@@ -103,6 +107,9 @@ public class TodoStore {
     }
 
     public void persist() {
+        if (mListener != null)
+            mListener.onTodoListUpdate();
+
         if (mPrefs == null) {
             Log.w(TAG, "preferences not available, not saving todos");
             return;
@@ -120,7 +127,6 @@ public class TodoStore {
             return;
         }
 
-
         mTodoList = new Gson().fromJson(mPrefs.getString(PREFS_NAME, null), LIST_TYPE);
 
         /* if there are no todos persisted yet */
@@ -132,5 +138,13 @@ public class TodoStore {
 
     public void sort() {
         Collections.sort(mTodoList, mObjComparator);
+    }
+
+    public void setOnTodoListUpdateListener(OnTodoListUpdateListener listener) {
+        mListener = listener;
+    }
+
+    public interface OnTodoListUpdateListener {
+        void onTodoListUpdate();
     }
 }

@@ -4,37 +4,38 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
+
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.adapters.TodoListAdapter;
+import de.mohmann.moretodo.adapters.ViewPagerAdapter;
 import de.mohmann.moretodo.data.Todo;
 import de.mohmann.moretodo.data.TodoStore;
+import de.mohmann.moretodo.fragments.TodoListFragment;
+import de.mohmann.moretodo.util.DateFormatter;
+import de.mohmann.moretodo.util.Utils;
 
 public class MainActivity extends AppCompatActivity
-        implements AdapterView.OnItemClickListener, View.OnClickListener,
+        implements View.OnClickListener,
         DialogInterface.OnClickListener {
 
     final public static String TAG = "MainActivity";
 
-    private ListView mTodoListView;
     private FloatingActionButton mFab;
-    private TodoListAdapter mTodoListAdapter;
-
     private TodoStore mTodoStore;
-
     private AlertDialog mDeleteDialog;
 
     @Override
@@ -44,22 +45,53 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mTodoListView = (ListView) findViewById(R.id.todo_list);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(this);
 
         mTodoStore = TodoStore.getInstance();
         mTodoStore.setPreferences(getPreferences(Context.MODE_PRIVATE));
         mTodoStore.load();
 
-        mTodoListAdapter = new TodoListAdapter(this, R.layout.todo_list_item, mTodoStore.getList());
-        mTodoListView.setAdapter(mTodoListAdapter);
-        mTodoListView.setEmptyView(findViewById(R.id.todo_list_empty));
-        registerForContextMenu(mTodoListView);
-
-        mTodoListView.setOnItemClickListener(this);
-        mFab.setOnClickListener(this);
-
         buildDialogs();
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        runBackgroundTasks();
+    }
+
+    private void runBackgroundTasks() {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, String.format("[%s] %s",
+                                DateFormatter.getDateTime(System.currentTimeMillis()),
+                                "background task"));
+
+                        for (Todo todo : mTodoStore.getList()) {
+                            if (!todo.isDone() && todo.getDueDate() > -1) {
+                                Log.d(TAG, todo.toString());
+                            }
+                        }
+                    }
+                });
+            }
+        }, 0, 5000);
+    }
+
+    private void setupViewPager(final ViewPager viewPager) {
+        final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(TodoListFragment.newInstance(TodoListAdapter.FILTER_ALL), "All");
+        adapter.addFragment(TodoListFragment.newInstance(TodoListAdapter.FILTER_PENDING), "Pending");
+        adapter.addFragment(TodoListFragment.newInstance(TodoListAdapter.FILTER_DONE), "Done");
+        viewPager.setAdapter(adapter);
+        mTodoStore.setOnTodoListUpdateListener(adapter);
     }
 
     private void buildDialogs() {
@@ -85,68 +117,13 @@ public class MainActivity extends AppCompatActivity
             return;
 
         if (id == DialogInterface.BUTTON_POSITIVE) {
-            Resources res = getResources();
             mTodoStore.removeDone();
             mTodoStore.persist();
-            mTodoListAdapter.notifyDataSetChanged();
 
-            String message = res.getString(R.string.message_todos_deleted);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Utils.toast(this, R.string.message_todos_deleted);
         } else {
             dialog.dismiss();
         }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(Todo.EXTRA_TODO, mTodoStore.get(position));
-        startActivity(intent);
-        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        Resources res = getResources();
-        if (v.getId() == R.id.todo_list) {
-            String[] menuItems = res.getStringArray(R.array.todo_list_context_menu);
-            menu.setHeaderTitle(res.getString(R.string.title_todo_list_context_menu));
-
-            for (int i = 0; i < menuItems.length; i++) {
-                menu.add(Menu.NONE, i, i, menuItems[i]);
-            }
-        }
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info =
-                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int menuItemIndex = item.getItemId();
-        int position = info.position;
-        int viewId = info.targetView.getId();
-
-        if (viewId == R.id.todo_list_item) {
-            switch (menuItemIndex) {
-                case 0: // edit
-                    Intent intent = new Intent(this, EditActivity.class);
-                    intent.putExtra(Todo.EXTRA_TODO, mTodoStore.get(position));
-                    startActivity(intent);
-                    overridePendingTransition(0, 0);
-                    break;
-                case 1: // delete
-                    Todo todo = mTodoStore.get(position);
-
-                    Toast.makeText(this, String.format("Deleted %s", todo.getTitle()),
-                            Toast.LENGTH_SHORT).show();
-
-                    mTodoStore.remove(position);
-                    mTodoStore.persist();
-                    mTodoListAdapter.notifyDataSetChanged();
-                    break;
-            }
-        }
-        return true;
     }
 
     @Override
@@ -177,7 +154,5 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        mTodoStore.sort();
-        mTodoListAdapter.notifyDataSetChanged();
     }
 }

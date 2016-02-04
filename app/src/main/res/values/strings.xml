@@ -1,4 +1,7 @@
 <resources>
+    <item type="id" name="TAG_VIEWHOLDER"/>
+    <item type="id" name="TAG_TODO"/>
+
     <string name="app_name">MoreToDo</string>
     <string name="title_activity_new">New Todo</string>
     <string name="title_activity_edit">Edit Todo</string>
@@ -31,6 +34,7 @@
     <string name="label_created">Created</string>
     <string name="label_finished">Finished</string>
     <string name="label_done">Done</string>
+    <string name="label_due_date">Due date</string>
 
     <string name="text_empty">-</string>
     <string name="icon">Icon</string>
@@ -40,7 +44,8 @@
     <string name="message_todo_deleted">Todo deleted</string>
     <string name="message_todos_deleted">Todos deleted</string>
     <string name="message_todo_enter_title">Enter at least a title</string>
-    <string name="message_todo_done">Todo done</string>
+    <string name="message_todo_done">Marked as done</string>
+    <string name="message_todo_pending">Marked as pending</string>
 
     <string name="title_activity_settings">Settings</string>
 
@@ -105,4 +110,8 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

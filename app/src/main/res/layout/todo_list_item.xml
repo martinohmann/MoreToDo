@@ -17,7 +17,11 @@
         android:layout_row="0"
         android:layout_column="0"
         android:layout_columnSpan="2"
-        android:paddingBottom="5dp" />
+        android:paddingBottom="5dp"
+        android:height="26dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:maxWidth="330sp" />
 
     <TextView
         android:layout_width="wrap_content"

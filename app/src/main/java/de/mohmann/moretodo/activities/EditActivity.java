@@ -1,28 +1,44 @@
 package de.mohmann.moretodo.activities;
 
-import android.content.res.Resources;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
+
+import java.util.Calendar;
 
 import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.data.Todo;
 import de.mohmann.moretodo.data.TodoStore;
+import de.mohmann.moretodo.util.DateFormatter;
+import de.mohmann.moretodo.util.Utils;
 
-public class EditActivity extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity implements View.OnClickListener,
+        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     final public static String TAG = "EditActivity";
 
     private EditText mInputTitle;
     private EditText mInputContent;
+    private TextView mLabelDueDate;
+    private EditText mInputDueDate;
+    private CheckBox mCheckBoxDueDate;
 
     private Todo mTodo;
+
+    private Calendar mCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +48,14 @@ public class EditActivity extends AppCompatActivity {
 
         mInputTitle = (EditText) findViewById(R.id.input_title);
         mInputContent = (EditText) findViewById(R.id.input_content);
+        mLabelDueDate = (TextView) findViewById(R.id.label_due_date);
+        mInputDueDate = (EditText) findViewById(R.id.input_due_date);
+        mCheckBoxDueDate = (CheckBox) findViewById(R.id.checkbox_due_date);
+
+        mInputDueDate.setOnClickListener(this);
+        mCheckBoxDueDate.setOnClickListener(this);
+
+        mCalendar = Calendar.getInstance();
 
         /* get intent data */
         mTodo = getIntent().getParcelableExtra(Todo.EXTRA_TODO);
@@ -39,12 +63,49 @@ public class EditActivity extends AppCompatActivity {
         populateViews();
     }
 
+    @Override
+    public void onClick(View view) {
+       if (view.getId() == R.id.input_due_date) {
+            Log.d(TAG, "due date clicked");
+           showDatePickerDialog();
+       } else if (view.getId() == R.id.checkbox_due_date) {
+           if (mCheckBoxDueDate.isChecked()) {
+               setDueDateVisibility(View.VISIBLE);
+               showDatePickerDialog();
+           } else {
+               setDueDateVisibility(View.GONE);
+           }
+       }
+    }
+
+    private void setDueDateVisibility(final int visibility) {
+        mLabelDueDate.setVisibility(visibility);
+        mInputDueDate.setVisibility(visibility);
+    }
+
     private void populateViews() {
         if (mTodo == null) {
             setTitle(getResources().getString(R.string.title_activity_new));
+            mLabelDueDate.setVisibility(View.GONE);
+            mInputDueDate.setVisibility(View.GONE);
+            mInputDueDate.setTag(-1);
         } else {
             mInputTitle.setText(mTodo.getTitle());
             mInputContent.setText(mTodo.getContent());
+
+            if (mTodo.getDueDate() > -1) {
+                mCheckBoxDueDate.setChecked(true);
+                mLabelDueDate.setVisibility(View.VISIBLE);
+                mInputDueDate.setVisibility(View.VISIBLE);
+
+                mCalendar.setTimeInMillis(mTodo.getDueDate());
+                mInputDueDate.setText(DateFormatter.getDateTime(mTodo.getDueDate()));
+                mInputDueDate.setTag(mCalendar.getTimeInMillis());
+            } else {
+                mLabelDueDate.setVisibility(View.GONE);
+                mInputDueDate.setVisibility(View.GONE);
+                mInputDueDate.setTag(-1);
+            }
         }
     }
 
@@ -69,6 +130,43 @@ public class EditActivity extends AppCompatActivity {
         });
     }
 
+    private void showDatePickerDialog() {
+        DatePickerDialog dialog = DatePickerDialog.newInstance(this,
+                mCalendar.get(Calendar.YEAR),
+                mCalendar.get(Calendar.MONTH),
+                mCalendar.get(Calendar.DAY_OF_MONTH)
+        );
+        dialog.show(getFragmentManager(), "DatePickerDialog");
+    }
+
+    private void showTimePickerDialog() {
+        TimePickerDialog dialog = TimePickerDialog.newInstance(this,
+                mCalendar.get(Calendar.HOUR_OF_DAY),
+                mCalendar.get(Calendar.MINUTE),
+                mCalendar.get(Calendar.SECOND),
+                DateFormat.is24HourFormat(getApplicationContext())
+        );
+        dialog.show(getFragmentManager(), "TimePickerDialog");
+    }
+
+    @Override
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+        mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        mCalendar.set(Calendar.MINUTE, minute);
+        mCalendar.set(Calendar.SECOND, 0);
+        mInputDueDate.setText(DateFormatter.getDateTime(mCalendar.getTime()));
+        Log.d(TAG, mCalendar.getTime().toString());
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        mCalendar.set(Calendar.YEAR, year);
+        mCalendar.set(Calendar.MONTH, monthOfYear);
+        mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        mInputDueDate.setText(DateFormatter.getDateTime(mCalendar.getTime()));
+        showTimePickerDialog();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -84,31 +182,34 @@ public class EditActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_save) {
-            Resources res = getResources();
+            Todo todo;
             TodoStore todoStore = TodoStore.getInstance();
             String title = mInputTitle.getText().toString().trim();
             String content = mInputContent.getText().toString().trim();
-            String message;
+            long dueDate = -1;
+
+            if (mCheckBoxDueDate.isChecked() && !mInputDueDate.getText().toString().equals(""))
+                dueDate = mCalendar.getTimeInMillis();
 
             if (title.equals("")) {
-                message = res.getString(R.string.message_todo_enter_title);
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                Utils.toast(this, R.string.message_todo_enter_title);
                 return true;
             }
 
             if (mTodo == null) {
-                mTodo = new Todo(title, content);
-                todoStore.add(mTodo);
-                message = res.getString(R.string.message_todo_created);
+                todo = new Todo(title, content);
+                todo.setDueDate(dueDate);
+                todoStore.add(todo);
+                Utils.toast(this, R.string.message_todo_created);
             } else {
-                mTodo = todoStore.getById(mTodo.getId());
-                mTodo.setTitle(title);
-                mTodo.setContent(content);
-                message = res.getString(R.string.message_todo_updated);
+                todo = todoStore.getById(mTodo.getId());
+                todo.setTitle(title);
+                todo.setContent(content);
+                todo.setDueDate(dueDate);
+                Utils.toast(this, R.string.message_todo_updated);
             }
             todoStore.persist();
 
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             finish();
         }
 

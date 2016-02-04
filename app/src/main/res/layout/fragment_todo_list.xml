@@ -1,0 +1,32 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.TodoListFragment">
+
+    <include layout="@layout/toolbar_shadow" />
+
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/todo_list"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:divider="@drawable/todo_list_divider"
+        android:dividerHeight="1dp"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay"
+        android:paddingBottom="80dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingRight="16dp"
+        android:smoothScrollbar="true" />
+
+    <TextView android:id="@+id/todo_list_empty"
+        android:layout_width="match_parent"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/todo_list_empty"
+        android:textAlignment="center"
+        android:textColor="@color/colorTodoTextLight"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical" />
+
+</FrameLayout>

@@ -3,7 +3,6 @@ package de.mohmann.moretodo.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,12 +13,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.data.Todo;
 import de.mohmann.moretodo.data.TodoStore;
 import de.mohmann.moretodo.util.DateFormatter;
+import de.mohmann.moretodo.util.Utils;
 
 public class DetailActivity extends AppCompatActivity
         implements DialogInterface.OnClickListener {
@@ -116,13 +115,11 @@ public class DetailActivity extends AppCompatActivity
             return;
 
         if (id == DialogInterface.BUTTON_POSITIVE) {
-            Resources res = getResources();
             TodoStore todoStore = TodoStore.getInstance();
             todoStore.removeById(mTodo.getId());
             todoStore.persist();
 
-            String message = res.getString(R.string.message_todo_deleted);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            Utils.toast(this, R.string.message_todo_deleted);
             finish();
         } else {
             dialog.dismiss();
@@ -146,7 +143,6 @@ public class DetailActivity extends AppCompatActivity
         if (mTodo == null)
             return true;
 
-        Resources res = getResources();
         TodoStore todoStore = TodoStore.getInstance();
 
         if (id == R.id.action_edit) {
@@ -163,10 +159,9 @@ public class DetailActivity extends AppCompatActivity
             mTodo.setDone(true);
             todoStore.persist();
 
-            populateViews();
+            Utils.toast(this, R.string.message_todo_done);
 
-            String message = res.getString(R.string.message_todo_done);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            populateViews();
         }
 
         return super.onOptionsItemSelected(item);
