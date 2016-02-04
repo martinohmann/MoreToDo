@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#e96d00</color>
+    <color name="colorTodoText">#212121</color>
+    <color name="colorTodoTextDone">#6c6c6c</color>
+    <color name="colorTodoListDivider">#eeeeee</color>
+</resources>
