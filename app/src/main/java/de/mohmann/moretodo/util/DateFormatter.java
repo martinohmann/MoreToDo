@@ -62,7 +62,7 @@ public class DateFormatter {
              if (diff > 604800) {
                  humanDate = getShortDate(date);
             } else if (diff > 86400) {
-                 adjusted = diff / 604800;
+                 adjusted = diff / 86400;
                  humanDate = String.format("in %d day%s", adjusted, pluralSuffix(adjusted));
             } else if (diff > 3600) {
                  adjusted = diff / 3600;

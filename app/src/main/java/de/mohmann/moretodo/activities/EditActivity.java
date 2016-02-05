@@ -113,7 +113,12 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         if (actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(true);
 
-        toolbar.setNavigationOnClickListener(this);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     private void showDatePickerDialog() {

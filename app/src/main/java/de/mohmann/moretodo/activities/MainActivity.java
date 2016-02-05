@@ -179,9 +179,11 @@ public class MainActivity extends AppCompatActivity
         String date = DateFormatter.getFullDate(todo.getDueDate());
         builder.setDefaults(Notification.DEFAULT_ALL);
         builder.setContentTitle(todo.getTitle());
+
         if (!todo.getContent().isEmpty()) {
-            builder.setContentText(todo.getContent());
+            builder.setContentText(Utils.shorten(todo.getContent(), 30, true));
         }
+
         builder.setSubText(date);
         builder.setSmallIcon(R.drawable.ic_assignment_white_48dp);
 
@@ -198,7 +200,7 @@ public class MainActivity extends AppCompatActivity
         resultIntent.putExtra(MainActivity.EXTRA_NOTIFICATION_ID, mNotificationId);
         resultIntent.putExtra(Todo.EXTRA_TODO, todo);
 
-        /* create stackbuild, add back stack, and add intent to the top of the stack */
+        /* create stackbuilder, add back stack, and add intent to the top of the stack */
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(DetailActivity.class);
         stackBuilder.addNextIntent(resultIntent);

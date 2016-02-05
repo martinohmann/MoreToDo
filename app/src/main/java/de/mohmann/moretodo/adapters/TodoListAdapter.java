@@ -1,6 +1,7 @@
 package de.mohmann.moretodo.adapters;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,13 +111,18 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
             return v;
         }
 
+       final int paintFlags = holder.titleView.getPaintFlags();
+
         if (todo.isDone()) {
-            if (!mDefaultFilter.equals(FILTER_DONE))
+            if (!mDefaultFilter.equals(FILTER_DONE)) {
                 v.setAlpha(0.3f);
+                holder.titleView.setPaintFlags(paintFlags | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
             holder.dateView.setText(DateFormatter.humanReadable(todo.getFinished()));
             holder.iconView.setImageResource(R.drawable.ic_done_black_18dp);
         } else {
             v.setAlpha(1f);
+            holder.titleView.setPaintFlags(paintFlags & ~Paint.STRIKE_THRU_TEXT_FLAG);
             holder.dateView.setText(DateFormatter.humanReadable(todo.getCreated()));
             holder.iconView.setImageResource(R.drawable.ic_add_black_18dp);
         }
