@@ -1,6 +1,10 @@
 package de.mohmann.moretodo.activities;
 
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +12,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -61,6 +66,10 @@ public class MainActivity extends AppCompatActivity
             TodoListAdapter.FILTER_DONE
     };
 
+    final public static String EXTRA_NOTIFICATION_ID =
+            "de.mohmann.moretodo.activities.MainActivity.NOTIFICATION_ID";
+    private static int mNotificationId = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +94,7 @@ public class MainActivity extends AppCompatActivity
         setTabAlpha(0);
 
         buildDeleteDialog();
-        //runBackgroundTasks();
+        runBackgroundTasks();
     }
 
     private void runBackgroundTasks() {
@@ -100,14 +109,18 @@ public class MainActivity extends AppCompatActivity
                                 "background task"));
 
                         for (Todo todo : mTodoStore.getList()) {
-                            if (!todo.isDone() && todo.getDueDate() > -1) {
-                                Log.d(TAG, todo.toString());
+                            if (!todo.isDone() && todo.getDueDate() != Todo.NO_DUEDATE && !todo.isNotified()) {
+                                if (todo.getDueDate() <= System.currentTimeMillis()) {
+                                    sendNotification(todo);
+                                    todo.setNotified(true);
+                                    mTodoStore.persist();
+                                }
                             }
                         }
                     }
                 });
             }
-        }, 0, 5000);
+        }, 0, 30000);
     }
 
     private void setTabAlpha(int position) {
@@ -155,6 +168,50 @@ public class MainActivity extends AppCompatActivity
         builder.setPositiveButton(R.string.yes, this);
         builder.setNegativeButton(R.string.cancel, this);
         mDeleteDialog = builder.create();
+    }
+
+
+    private void sendNotification(Todo todo) {
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+        String date = DateFormatter.getFullDate(todo.getDueDate());
+        builder.setDefaults(Notification.DEFAULT_ALL);
+        builder.setContentTitle(todo.getTitle());
+        if (!todo.getContent().isEmpty()) {
+            builder.setContentText(todo.getContent());
+        }
+        builder.setSubText(date);
+        builder.setSmallIcon(R.drawable.ic_assignment_white_48dp);
+
+        builder.setTicker(String.format("%s: %s", date, todo.getTitle()));
+
+        builder.setAutoCancel(false);
+        builder.setOngoing(false);
+
+        /* set vibration parameters */
+        builder.setVibrate(new long[]{0, 500, 50, 2000});
+
+        /* create new intent for notification with device and notification id as payload */
+        Intent resultIntent = new Intent(this, DetailActivity.class);
+        resultIntent.putExtra(MainActivity.EXTRA_NOTIFICATION_ID, mNotificationId);
+        resultIntent.putExtra(Todo.EXTRA_TODO, todo);
+
+        /* create stackbuild, add back stack, and add intent to the top of the stack */
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(DetailActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+
+        /* gets a PendingIntent containing the entire back stack */
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(mNotificationId, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        /* add intent to notification */
+        builder.setContentIntent(resultPendingIntent);
+
+        /* deploy */
+        notificationManager.notify(mNotificationId++, builder.build());
     }
 
     @Override

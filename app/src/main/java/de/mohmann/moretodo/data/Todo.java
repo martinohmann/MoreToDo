@@ -25,6 +25,7 @@ public class Todo implements Comparable<Todo>, Parcelable {
     private long finished = 0;
     private long dueDate = NO_DUEDATE;
     private boolean done = false;
+    private boolean notified = false;
 
     final public static String EXTRA_TODO = "de.mohmann.moretodo.Todo";
 
@@ -130,6 +131,14 @@ public class Todo implements Comparable<Todo>, Parcelable {
             finished = System.currentTimeMillis();
         }
         this.done = done;
+    }
+
+    public boolean isNotified() {
+        return notified;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
     }
 
     @Override

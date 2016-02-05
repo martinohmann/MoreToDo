@@ -1,6 +1,8 @@
 package de.mohmann.moretodo.activities;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -56,6 +58,14 @@ public class DetailActivity extends AppCompatActivity
 
         /* get intent data */
         mTodo = getIntent().getParcelableExtra(Todo.EXTRA_TODO);
+
+        final int notificationId = getIntent().getIntExtra(MainActivity.EXTRA_NOTIFICATION_ID, -1);
+
+        if (notificationId > -1) {
+            final NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(notificationId);
+        }
         
         populateViews();
         buildDialogs();
@@ -69,7 +79,7 @@ public class DetailActivity extends AppCompatActivity
         mTitleView.setText(mTodo.getTitle());
         mContentView.setText(mTodo.getContent());
 
-        if (mTodo.getContent().equals("")) {
+        if (mTodo.getContent().isEmpty()) {
             mContainerContent.setVisibility(View.GONE);
         } else {
             mContainerContent.setVisibility(View.VISIBLE);

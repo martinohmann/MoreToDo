@@ -171,14 +171,14 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             long dueDate = Todo.NO_DUEDATE;
 
             if (mCheckBoxDueDate.isChecked()) {
-                if (mInputDueDate.getText().toString().equals("")) {
+                if (mInputDueDate.getText().toString().isEmpty()) {
                     Utils.toast(this, R.string.message_todo_enter_duedate);
                     return true;
                 }
                 dueDate = mCalendar.getTimeInMillis();
             }
 
-            if (title.equals("")) {
+            if (title.isEmpty()) {
                 Utils.toast(this, R.string.message_todo_enter_title);
                 return true;
             }
@@ -193,6 +193,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 todo.setTitle(title);
                 todo.setContent(content);
                 todo.setDueDate(dueDate);
+                if (dueDate > System.currentTimeMillis())
+                    todo.setNotified(false);
                 Utils.toast(this, R.string.message_todo_updated);
             }
             todoStore.persist();
