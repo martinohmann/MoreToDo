@@ -8,9 +8,12 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.mohmann.moretodo.R;
@@ -35,6 +38,21 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
     private List<Todo> mFilteredTodoList = new ArrayList<>();
     public String mDefaultFilter;
 
+    private Comparator<Todo> mComparator = new Comparator<Todo>() {
+        @Override
+        public int compare(Todo t1, Todo t2) {
+            if (t1 == null || t2 == null)
+                return -1;
+            if (mDefaultFilter.equals(FILTER_ALL))
+                return t1.getCreated() > t2.getCreated() ? -1 : 1;
+            if (mDefaultFilter.equals(FILTER_PENDING))
+                return t1.getCreated() > t2.getCreated() ? 1 : -1;
+            if (mDefaultFilter.equals(FILTER_DONE))
+                return t1.getFinished() > t2.getFinished() ? -1 : 1;
+            return -1;
+        }
+    };
+
     public TodoListAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
     }
@@ -44,6 +62,10 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
         mOriginalTodoList = items;
         mFilteredTodoList.addAll(items);
         mDefaultFilter = defaultFilter;
+    }
+
+    public Comparator<Todo> getComparator() {
+        return mComparator;
     }
 
     @Override
@@ -75,6 +97,8 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
             holder.dateView = (TextView) v.findViewById(R.id.date);
             holder.iconView = (ImageView) v.findViewById(R.id.icon);
             holder.checkBox = (CheckBox) v.findViewById(R.id.done);
+            holder.dueDateContainer = (RelativeLayout) v.findViewById(R.id.container_due_date);
+            holder.dueDate = (TextView) v.findViewById(R.id.due_date);
             v.setTag(R.id.TAG_VIEWHOLDER, holder);
         } else {
             holder = (ViewHolder) v.getTag(R.id.TAG_VIEWHOLDER);
@@ -95,6 +119,13 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
             v.setAlpha(1f);
             holder.dateView.setText(DateFormatter.humanReadable(todo.getCreated()));
             holder.iconView.setImageResource(R.drawable.ic_add_black_18dp);
+        }
+
+        if (!todo.isDone() && todo.getDueDate() != Todo.NO_DUEDATE) {
+            holder.dueDateContainer.setVisibility(View.VISIBLE);
+            holder.dueDate.setText(DateFormatter.humanReadable(todo.getDueDate()));
+        } else {
+            holder.dueDateContainer.setVisibility(View.GONE);
         }
 
         holder.titleView.setText(todo.getTitle());
@@ -143,6 +174,8 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
         TextView dateView;
         ImageView iconView;
         CheckBox checkBox;
+        RelativeLayout dueDateContainer;
+        TextView dueDate;
     }
 
     private class TodoFilter extends Filter {
@@ -186,6 +219,7 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
             mFilteredTodoList = (ArrayList<Todo>) results.values;
 
             if(mFilteredTodoList != null && mFilteredTodoList.size() > 0) {
+                Collections.sort(mFilteredTodoList, mComparator);
                 notifyDataSetChanged();
             } else {
                 notifyDataSetInvalidated();

@@ -54,7 +54,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter
 
     @Override
     public void onTodoListUpdate() {
-        Log.d(TAG, "onTodoListUpdate");
         updateFragments();
     }
 }

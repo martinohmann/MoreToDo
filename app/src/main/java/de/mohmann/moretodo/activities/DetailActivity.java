@@ -7,11 +7,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import de.mohmann.moretodo.R;
@@ -26,10 +27,13 @@ public class DetailActivity extends AppCompatActivity
     final public static String TAG = "DetailActivity";
 
     private TextView mTitleView;
+    private RelativeLayout mContainerContent;
     private TextView mContentView;
     private TextView mCreatedView;
     private ImageView mDoneView;
     private TextView mFinishedView;
+    private RelativeLayout mContainerDueDate;
+    private TextView mDueDateView;
 
     private AlertDialog mDeleteDialog;
 
@@ -42,10 +46,13 @@ public class DetailActivity extends AppCompatActivity
         setupActionBar();
 
         mTitleView = (TextView) findViewById(R.id.text_title);
+        mContainerContent = (RelativeLayout) findViewById(R.id.container_content);
         mContentView = (TextView) findViewById(R.id.text_content);
         mCreatedView = (TextView) findViewById(R.id.text_created);
         mDoneView = (ImageView) findViewById(R.id.icon_done);
         mFinishedView = (TextView) findViewById(R.id.text_finished);
+        mContainerDueDate = (RelativeLayout) findViewById(R.id.container_due_date);
+        mDueDateView = (TextView) findViewById(R.id.text_due_date);
 
         /* get intent data */
         mTodo = getIntent().getParcelableExtra(Todo.EXTRA_TODO);
@@ -60,21 +67,26 @@ public class DetailActivity extends AppCompatActivity
 
         setTitle(mTodo.getTitle());
         mTitleView.setText(mTodo.getTitle());
-        String content = mTodo.getContent();
+        mContentView.setText(mTodo.getContent());
 
-        if (content.equals("")) {
-            findViewById(R.id.label_content).setVisibility(View.GONE);
-            mContentView.setVisibility(View.GONE);
+        if (mTodo.getContent().equals("")) {
+            mContainerContent.setVisibility(View.GONE);
+        } else {
+            mContainerContent.setVisibility(View.VISIBLE);
+            //mContentView.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
-        mContentView.setText(content);
-        mCreatedView.setText(DateFormatter.getDateTime(mTodo.getCreated()));
+        mCreatedView.setText(DateFormatter.getFullDate(mTodo.getCreated()));
 
         if (mTodo.isDone()) {
             mDoneView.setImageResource(R.drawable.ic_done_black_18dp);
-            findViewById(R.id.label_finished).setVisibility(View.VISIBLE);
-            mFinishedView.setText(DateFormatter.getDateTime(mTodo.getFinished()));
+            mFinishedView.setText(DateFormatter.getFullDate(mTodo.getFinished()));
             mFinishedView.setVisibility(View.VISIBLE);
+        }
+
+        if (mTodo.getDueDate() > -1) {
+            mDueDateView.setText(DateFormatter.getFullDate(mTodo.getDueDate()));
+            mContainerDueDate.setVisibility(View.VISIBLE);
         }
     }
 
@@ -172,6 +184,7 @@ public class DetailActivity extends AppCompatActivity
         super.onResume();
 
         if (mTodo != null) {
+            /* update todo item */
             mTodo = TodoStore.getInstance().getById(mTodo.getId());
             populateViews();
         }

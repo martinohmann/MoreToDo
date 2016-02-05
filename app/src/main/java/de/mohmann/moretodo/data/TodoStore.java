@@ -107,8 +107,7 @@ public class TodoStore {
     }
 
     public void persist() {
-        if (mListener != null)
-            mListener.onTodoListUpdate();
+        notifyDataSetChanged();
 
         if (mPrefs == null) {
             Log.w(TAG, "preferences not available, not saving todos");
@@ -138,6 +137,11 @@ public class TodoStore {
 
     public void sort() {
         Collections.sort(mTodoList, mObjComparator);
+    }
+
+    public void notifyDataSetChanged() {
+        if (mListener != null)
+            mListener.onTodoListUpdate();
     }
 
     public void setOnTodoListUpdateListener(OnTodoListUpdateListener listener) {

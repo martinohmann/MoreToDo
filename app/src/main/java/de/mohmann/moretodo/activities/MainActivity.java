@@ -4,18 +4,21 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,13 +33,33 @@ import de.mohmann.moretodo.util.Utils;
 
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener,
-        DialogInterface.OnClickListener {
+        DialogInterface.OnClickListener,
+        ViewPager.OnPageChangeListener {
 
     final public static String TAG = "MainActivity";
 
-    private FloatingActionButton mFab;
     private TodoStore mTodoStore;
     private AlertDialog mDeleteDialog;
+
+    private TabLayout mTabLayout;
+
+    final private int[] mTabIcons = {
+            R.drawable.ic_list_white_18dp,
+            R.drawable.ic_schedule_white_18dp,
+            R.drawable.ic_done_white_18dp
+    };
+
+    final private int[] mTabLabels = {
+            R.string.label_tab_all,
+            R.string.label_tab_pending,
+            R.string.label_tab_done
+    };
+
+    final private String[] mTabFilters = {
+            TodoListAdapter.FILTER_ALL,
+            TodoListAdapter.FILTER_PENDING,
+            TodoListAdapter.FILTER_DONE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,22 +68,24 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setOnClickListener(this);
-
         mTodoStore = TodoStore.getInstance();
         mTodoStore.setPreferences(getPreferences(Context.MODE_PRIVATE));
         mTodoStore.load();
 
-        buildDialogs();
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(this);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
+        viewPager.addOnPageChangeListener(this);
 
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(viewPager);
+        setupTabIcons();
+        setTabAlpha(0);
 
-        runBackgroundTasks();
+        buildDeleteDialog();
+        //runBackgroundTasks();
     }
 
     private void runBackgroundTasks() {
@@ -71,7 +96,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         Log.d(TAG, String.format("[%s] %s",
-                                DateFormatter.getDateTime(System.currentTimeMillis()),
+                                DateFormatter.getFullDate(System.currentTimeMillis()),
                                 "background task"));
 
                         for (Todo todo : mTodoStore.getList()) {
@@ -85,23 +110,66 @@ public class MainActivity extends AppCompatActivity
         }, 0, 5000);
     }
 
+    private void setTabAlpha(int position) {
+        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = mTabLayout.getTabAt(i);
+            if (tab == null)
+                continue;
+            View view = tab.getCustomView();
+            if (view == null)
+                continue;
+            view.setAlpha(i == position ? 1f : 0.8f);
+        }
+    }
+
+    private void setupTabIcons() {
+        TextView tabView;
+        TabLayout.Tab tab;
+
+        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+            tabView = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+            tabView.setText(mTabLabels[i]);
+            tabView.setCompoundDrawablesWithIntrinsicBounds(mTabIcons[i], 0, 0, 0);
+            tab = mTabLayout.getTabAt(i);
+            if (tab != null) {
+                tab.setCustomView(tabView);
+            }
+        }
+    }
+
     private void setupViewPager(final ViewPager viewPager) {
         final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(TodoListFragment.newInstance(TodoListAdapter.FILTER_ALL), "All");
-        adapter.addFragment(TodoListFragment.newInstance(TodoListAdapter.FILTER_PENDING), "Pending");
-        adapter.addFragment(TodoListFragment.newInstance(TodoListAdapter.FILTER_DONE), "Done");
+        final Resources res = getResources();
+        for (int i = 0; i < mTabLabels.length; i++) {
+            adapter.addFragment(TodoListFragment.newInstance(mTabFilters[i]),
+                    res.getString(mTabLabels[i]));
+        }
         viewPager.setAdapter(adapter);
         mTodoStore.setOnTodoListUpdateListener(adapter);
     }
 
-    private void buildDialogs() {
+    private void buildDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.question_delete_items_long)
-                .setTitle(R.string.alert_delete_items)
-                .setPositiveButton(R.string.yes, this)
-                .setNegativeButton(R.string.cancel, this);
-
+        builder.setMessage(R.string.question_delete_items_long);
+        builder.setTitle(R.string.alert_delete_items);
+        builder.setPositiveButton(R.string.yes, this);
+        builder.setNegativeButton(R.string.cancel, this);
         mDeleteDialog = builder.create();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        /* unused */
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        setTabAlpha(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        /* unused */
     }
 
     @Override
@@ -140,11 +208,12 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        /* if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             overridePendingTransition(0, 0);
-        } else if (id == R.id.action_clear_done) {
+        } else */
+        if (id == R.id.action_clear_done) {
             mDeleteDialog.show();
         }
 

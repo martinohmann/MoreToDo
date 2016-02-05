@@ -3,7 +3,9 @@ package de.mohmann.moretodo.fragments;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -14,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.Comparator;
+
 import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.activities.DetailActivity;
 import de.mohmann.moretodo.activities.EditActivity;
@@ -22,7 +26,8 @@ import de.mohmann.moretodo.data.Todo;
 import de.mohmann.moretodo.data.TodoStore;
 import de.mohmann.moretodo.util.Utils;
 
-public class TodoListFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class TodoListFragment extends Fragment implements AdapterView.OnItemClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     final public static String TAG = "TodoListFragment";
     final public static String EXTRA_FILTER =
@@ -30,6 +35,8 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
 
     private TodoListAdapter mTodoListAdapter;
     private TodoStore mTodoStore;
+
+    private SwipeRefreshLayout mSwipeLayout;
 
     public static TodoListFragment newInstance(String filter) {
         TodoListFragment f = new TodoListFragment();
@@ -57,7 +64,21 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
         listView.setOnItemClickListener(this);
         registerForContextMenu(listView);
 
+        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
+        mSwipeLayout.setOnRefreshListener(this);
+
         return view;
+    }
+    @Override
+    public void onRefresh() {
+        /* use delay to make it look smoother */
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateViews();
+                mSwipeLayout.setRefreshing(false);
+            }
+        }, 1000);
     }
 
     @Override

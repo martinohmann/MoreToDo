@@ -15,80 +15,94 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="de.mohmann.moretodo.activities.DetailActivity"
-        tools:showIn="@layout/activity_detail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/label_title"
-                android:id="@+id/label_title"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true" />
+                android:id="@+id/label_title" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/text_empty"
                 android:id="@+id/text_title"
-                android:layout_below="@+id/label_title"
-                android:layout_alignStart="@+id/label_title" />
+                android:layout_below="@+id/label_title" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/label_content"
-                android:id="@+id/label_content"
+                android:id="@+id/container_content"
                 android:layout_below="@+id/text_title"
-                android:layout_alignStart="@+id/text_title"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/label_content"
+                    android:id="@+id/label_content" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_empty"
+                    android:autoLink="web"
+                    android:textColorLink="@color/colorTextLink"
+                    android:id="@+id/text_content"
+                    android:layout_below="@+id/label_content" />
+            </RelativeLayout>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/text_empty"
-                android:id="@+id/text_content"
-                android:layout_below="@+id/label_content"
-                android:layout_alignStart="@+id/label_content" />
-
-            <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/label_created"
                 android:id="@+id/label_created"
-                android:layout_below="@+id/text_content"
-                android:layout_alignStart="@+id/text_content"
+                android:layout_below="@+id/container_content"
                 android:layout_marginTop="20dp"/>
 
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="18dp"
+                android:minHeight="18dp"
+                android:maxWidth="18dp"
+                android:maxHeight="18dp"
+                android:alpha="0.7"
+                android:src="@drawable/ic_add_black_18dp"
+                android:id="@+id/icon_created"
+                android:layout_below="@+id/label_created"
+                android:paddingTop="2dp" />
+
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/text_empty"
                 android:id="@+id/text_created"
                 android:layout_below="@+id/label_created"
-                android:layout_alignStart="@+id/label_created" />
+                android:layout_toEndOf="@+id/icon_created"
+                android:layout_marginStart="5dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/label_done"
                 android:id="@+id/label_done"
                 android:layout_below="@+id/text_created"
-                android:layout_alignStart="@+id/text_created"
                 android:layout_marginTop="20dp"/>
 
             <ImageView
@@ -102,28 +116,58 @@
                 android:src="@drawable/ic_clear_black_18dp"
                 android:id="@+id/icon_done"
                 android:layout_below="@+id/label_done"
-                android:layout_alignStart="@+id/label_done" />
+                android:paddingTop="2dp" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/label_finished"
-                android:id="@+id/label_finished"
-                android:layout_below="@+id/icon_done"
-                android:layout_alignStart="@+id/icon_done"
-                android:layout_marginTop="20dp"
-                android:visibility="gone" />
-
-            <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/text_empty"
                 android:id="@+id/text_finished"
-                android:layout_below="@+id/label_finished"
-                android:layout_alignStart="@+id/label_finished"
+                android:layout_below="@+id/label_done"
+                android:layout_toEndOf="@+id/icon_done"
+                android:layout_marginStart="5dp"
                 android:visibility="gone" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/container_due_date"
+                android:layout_below="@+id/icon_done"
+                android:layout_marginTop="20dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/label_due_date"
+                    android:id="@+id/label_due_date" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="18dp"
+                    android:minHeight="18dp"
+                    android:maxWidth="18dp"
+                    android:maxHeight="18dp"
+                    android:alpha="0.7"
+                    android:src="@drawable/ic_schedule_black_18dp"
+                    android:id="@+id/icon_due_date"
+                    android:layout_below="@+id/label_due_date"
+                    android:paddingTop="2dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_empty"
+                    android:id="@+id/text_due_date"
+                    android:layout_below="@+id/label_due_date"
+                    android:layout_toEndOf="@+id/icon_due_date"
+                    android:layout_marginStart="5dp" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
     </ScrollView>

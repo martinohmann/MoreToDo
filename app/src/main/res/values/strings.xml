@@ -35,6 +35,7 @@
     <string name="label_finished">Finished</string>
     <string name="label_done">Done</string>
     <string name="label_due_date">Due date</string>
+    <string name="label_use_due_date">Use due date</string>
 
     <string name="text_empty">-</string>
     <string name="icon">Icon</string>
@@ -44,8 +45,13 @@
     <string name="message_todo_deleted">Todo deleted</string>
     <string name="message_todos_deleted">Todos deleted</string>
     <string name="message_todo_enter_title">Enter at least a title</string>
+    <string name="message_todo_enter_duedate">Pick a due date</string>
     <string name="message_todo_done">Marked as done</string>
     <string name="message_todo_pending">Marked as pending</string>
+
+    <string name="label_tab_all">All</string>
+    <string name="label_tab_pending">Pending</string>
+    <string name="label_tab_done">Done</string>
 
     <string name="title_activity_settings">Settings</string>
 

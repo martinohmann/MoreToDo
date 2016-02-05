@@ -16,12 +16,14 @@ public class Todo implements Comparable<Todo>, Parcelable {
 
     final public static String TAG = "Todo";
 
+    final public static int NO_DUEDATE = -1;
+
     private String id = UUID.randomUUID().toString();
     private String title = "";
     private String content = "";
     private long created = System.currentTimeMillis();
-    private long finished = -1;
-    private long dueDate = -1;
+    private long finished = 0;
+    private long dueDate = NO_DUEDATE;
     private boolean done = false;
 
     final public static String EXTRA_TODO = "de.mohmann.moretodo.Todo";
@@ -55,9 +57,9 @@ public class Todo implements Comparable<Todo>, Parcelable {
         title = b.getString(PARCEL_EXTRA_TITLE, "");
         content = b.getString(PARCEL_EXTRA_CONTENT, "");
         done = b.getBoolean(PARCEL_EXTRA_DONE, false);
-        created = b.getLong(PARCEL_EXTRA_CREATED, -1);
-        finished = b.getLong(PARCEL_EXTRA_FINISHED, -1);
-        dueDate = b.getLong(PARCEL_EXTRA_DUEDATE, -1);
+        created = b.getLong(PARCEL_EXTRA_CREATED, 0);
+        finished = b.getLong(PARCEL_EXTRA_FINISHED, 0);
+        dueDate = b.getLong(PARCEL_EXTRA_DUEDATE, NO_DUEDATE);
     }
 
     @Override
