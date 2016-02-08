@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.app.TaskStackBuilder;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
@@ -30,15 +31,21 @@ public class NotificationService extends Service {
 
     final public static String EXTRA_NOTIFICATION_ID =
             "de.mohmann.moretodo.services.NotificationService.NOTIFICATION_ID";
+
+    final public static String ACTION_TODO_MARKED_DONE =
+            "de.mohmann.moretodo.services.NotificationService.ACTION_TODO_MARKED_DONE";
+
     private static int mNotificationId = 0;
 
     private static PendingIntent sPendingIntent = null;
 
+    private Context mContext;
     private TodoStore mTodoStore;
     private NotificationManager mNotificationManager;
 
     @Override
     public void onCreate() {
+        mContext = getApplicationContext();
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mTodoStore = TodoStore.getInstance(this);
 
@@ -71,14 +78,14 @@ public class NotificationService extends Service {
     }
 
     private void notify(Todo todo) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
 
         String date = DateFormatter.getFullDate(todo.getDueDate());
         builder.setDefaults(Notification.DEFAULT_ALL);
         builder.setContentTitle(todo.getTitle());
 
         if (!todo.getContent().isEmpty()) {
-            builder.setContentText(Utils.shorten(todo.getContent(), 30, true));
+            builder.setContentText(Utils.shorten(todo.getContent(), 140, true));
         }
 
         builder.setSubText(date);
@@ -86,15 +93,14 @@ public class NotificationService extends Service {
 
         builder.setTicker(String.format("%s: %s", date, todo.getTitle()));
 
-        builder.setAutoCancel(false);
+        builder.setAutoCancel(true);
         builder.setOngoing(false);
 
         /* set vibration parameters */
         builder.setVibrate(new long[] { 0, 500, 50, 2000 });
 
         /* create new intent for notification with device and notification id as payload */
-        Intent resultIntent = new Intent(this, DetailActivity.class);
-        resultIntent.putExtra(EXTRA_NOTIFICATION_ID, mNotificationId);
+        Intent resultIntent = new Intent(mContext, DetailActivity.class);
         resultIntent.putExtra(Todo.EXTRA_TODO, todo);
 
         /* create stackbuilder, add back stack, and add intent to the top of the stack */
@@ -103,11 +109,22 @@ public class NotificationService extends Service {
         stackBuilder.addNextIntent(resultIntent);
 
         /* gets a PendingIntent containing the entire back stack */
-        PendingIntent resultPendingIntent =
+        PendingIntent pendingContentIntent =
                 stackBuilder.getPendingIntent(mNotificationId, PendingIntent.FLAG_UPDATE_CURRENT);
 
         /* add intent to notification */
-        builder.setContentIntent(resultPendingIntent);
+        builder.setContentIntent(pendingContentIntent);
+
+        /* create intent to mark todo as done */
+        Intent markIntent = new Intent(ACTION_TODO_MARKED_DONE);
+        markIntent.putExtra(Todo.EXTRA_TODO, todo);
+
+        PendingIntent pendingMarkIntent = PendingIntent.getBroadcast(this, 0, markIntent, 0);
+
+        builder.addAction(R.drawable.ic_assignment_white_18dp, getString(R.string.view),
+                pendingContentIntent);
+        builder.addAction(R.drawable.ic_done_white_18dp, getString(R.string.mark_item_done),
+                pendingMarkIntent);
 
         /* deploy */
         mNotificationManager.notify(mNotificationId++, builder.build());

@@ -35,16 +35,16 @@ public class Todo implements Comparable<Todo>, Parcelable {
     final public static String COLUMN_DONE = "done";
     final public static String COLUMN_NOTIFIED = "notified";
 
-
-    final public static String EXTRA_TODO = "de.mohmann.moretodo.Todo";
+    final public static String EXTRA_TODO = "de.mohmann.moretodo.data.Todo";
 
     final private static String PARCEL_EXTRA_ID = "de.mohmann.moretodo.data.Todo.ID";
     final private static String PARCEL_EXTRA_TITLE = "de.mohmann.moretodo.data.Todo.TITLE";
     final private static String PARCEL_EXTRA_CONTENT = "de.mohmann.moretodo.data.Todo.CONTENT";
-    final private static String PARCEL_EXTRA_DONE = "de.mohmann.moretodo.data.Todo.DONE";
     final private static String PARCEL_EXTRA_CREATED = "de.mohmann.moretodo.data.Todo.CREATED";
     final private static String PARCEL_EXTRA_FINISHED = "de.mohmann.moretodo.data.Todo.FINISHED";
     final private static String PARCEL_EXTRA_DUEDATE = "de.mohmann.moretodo.data.Todo.DUEDATE";
+    final private static String PARCEL_EXTRA_DONE = "de.mohmann.moretodo.data.Todo.DONE";
+    final private static String PARCEL_EXTRA_NOTIFIED = "de.mohmann.moretodo.data.Todo.NOTIFIED";
 
     public static final Parcelable.Creator<Todo> CREATOR = new Parcelable.Creator<Todo>() {
         public Todo createFromParcel(final Parcel in) {
@@ -66,10 +66,11 @@ public class Todo implements Comparable<Todo>, Parcelable {
         id = b.getLong(PARCEL_EXTRA_ID, ID_UNSET);
         title = b.getString(PARCEL_EXTRA_TITLE, "");
         content = b.getString(PARCEL_EXTRA_CONTENT, "");
-        done = b.getBoolean(PARCEL_EXTRA_DONE, false);
         creationDate = b.getLong(PARCEL_EXTRA_CREATED, System.currentTimeMillis());
         finishDate = b.getLong(PARCEL_EXTRA_FINISHED, DATE_UNSET);
         dueDate = b.getLong(PARCEL_EXTRA_DUEDATE, DATE_UNSET);
+        done = b.getBoolean(PARCEL_EXTRA_DONE, false);
+        notified = b.getBoolean(PARCEL_EXTRA_NOTIFIED, false);
     }
 
     @Override
@@ -83,10 +84,11 @@ public class Todo implements Comparable<Todo>, Parcelable {
         b.putLong(PARCEL_EXTRA_ID, id);
         b.putString(PARCEL_EXTRA_TITLE, title);
         b.putString(PARCEL_EXTRA_CONTENT, content);
-        b.putBoolean(PARCEL_EXTRA_DONE, done);
         b.putLong(PARCEL_EXTRA_CREATED, creationDate);
         b.putLong(PARCEL_EXTRA_FINISHED, finishDate);
         b.putLong(PARCEL_EXTRA_DUEDATE, dueDate);
+        b.putBoolean(PARCEL_EXTRA_DONE, done);
+        b.putBoolean(PARCEL_EXTRA_NOTIFIED, notified);
         parcel.writeBundle(b);
     }
 

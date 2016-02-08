@@ -17,9 +17,16 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".services.NotificationFeedbackReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="de.mohmann.moretodo.services.NotificationService.ACTION_TODO_MARKED_DONE" />
+            </intent-filter>
+        </receiver>
 
         <service android:name=".services.NotificationService" />
-
 
         <activity
             android:name=".activities.MainActivity"

@@ -149,7 +149,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         int id = item.getItemId();
 
         if (id == R.id.action_save) {
-            Todo todo;
             TodoStore todoStore = TodoStore.getInstance(this);
             String title = mInputTitle.getText().toString().trim();
             String content = mInputContent.getText().toString().trim();
@@ -157,7 +156,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             long dueDate = Todo.DATE_UNSET;
 
             if (hasDueDate) {
-                Log.d(TAG, "YES");
                 dueDate = mCalendar.getTimeInMillis();
             }
 
@@ -167,12 +165,12 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             if (mTodo == null) {
-                todo = new Todo(title, content);
+                Todo todo = new Todo(title, content);
                 todo.setDueDate(dueDate);
                 todoStore.add(todo);
                 Utils.toast(this, R.string.message_todo_created);
             } else {
-                todo = todoStore.getById(mTodo.getId());
+                Todo todo = todoStore.getById(mTodo.getId());
                 todo.setTitle(title);
                 todo.setContent(content);
                 todo.setDueDate(dueDate);

@@ -60,9 +60,11 @@ public class DetailActivity extends AppCompatActivity
         mTodoStore = TodoStore.getInstance(this);
 
         /* get intent data */
-        mTodo = getIntent().getParcelableExtra(Todo.EXTRA_TODO);
+        Intent intent = getIntent();
 
-        final int notificationId = getIntent().getIntExtra(NotificationService.EXTRA_NOTIFICATION_ID, -1);
+        mTodo = intent.getParcelableExtra(Todo.EXTRA_TODO);
+
+        final int notificationId = intent.getIntExtra(NotificationService.EXTRA_NOTIFICATION_ID, -1);
 
         if (notificationId > -1) {
             final NotificationManager notificationManager =

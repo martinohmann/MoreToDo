@@ -28,6 +28,7 @@
     <string name="delete_item">Delete item</string>
     <string name="mark_item_done">Mark as done</string>
     <string name="clear_done">Clear done items</string>
+    <string name="view">View</string>
 
     <string name="label_title">Title</string>
     <string name="label_content">Content</string>
