@@ -109,11 +109,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.delete(Todo.TABLE_NAME, "id = ? ", new String[]{Long.toString(todo.getId())});
     }
 
-    public Todo getTodo(final int id) {
+    public Todo getTodo(final long id) {
         Log.d(TAG, "loading todo with id: " + id);
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + Todo.TABLE_NAME + "WHERE id = ?",
-                new String[]{Integer.toString(id)});
+                new String[] { Long.toString(id) } );
         cursor.moveToFirst();
 
         return createTodoFromCursor(cursor);
@@ -124,6 +124,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         List<Todo> todos = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + Todo.TABLE_NAME, null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            todos.add(createTodoFromCursor(cursor));
+            cursor.moveToNext();
+        }
+
+        return todos;
+    }
+
+    public List<Todo> getTodosByFilter(String filter) {
+        filter = "%" + filter + "%";
+        Log.d(TAG, "loading todos");
+        SQLiteDatabase db = getReadableDatabase();
+        List<Todo> todos = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + Todo.TABLE_NAME +
+                        " WHERE (title LIKE ? OR content LIKE ?)", new String[] { filter, filter });
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
@@ -146,7 +163,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         todo.setCreationDate(getLong(cursor, Todo.COLUMN_CREATION_DATE));
         todo.setFinishDate(getLong(cursor, Todo.COLUMN_FINISH_DATE));
         todo.setDueDate(getLong(cursor, Todo.COLUMN_DUE_DATE));
-        todo.setDone(getBoolean(cursor, Todo.COLUMN_DONE));
+        todo.setDone(getBoolean(cursor, Todo.COLUMN_DONE), false);
         todo.setNotified(getBoolean(cursor, Todo.COLUMN_NOTIFIED));
         return todo;
     }

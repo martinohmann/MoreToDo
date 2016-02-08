@@ -3,8 +3,6 @@ package de.mohmann.moretodo.data;
 import android.content.Context;
 import android.util.Log;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,19 +15,15 @@ public class TodoStore {
 
     final public static String TAG = "TodoStore";
 
+    final public static String FILTER_DEFAULT = "";
+
     private static TodoStore sInstance;
 
     private List<Todo> mTodoList = new ArrayList<>();
-
-    private OnTodoListUpdateListener mListener = null;
-
+    private List<OnTodoListUpdateListener> mListListeners = new ArrayList<>();
+    private List<OnTodoListFilterListener> mFilterListeners = new ArrayList<>();
     private DatabaseHelper mDbHelper;
-
-    private Comparator<Todo> mObjComparator = new Comparator<Todo>() {
-        public int compare(Todo t1, Todo t2) {
-            return t2.compareTo(t1);
-        }
-    };
+    private String mFilter = FILTER_DEFAULT;
 
     public static synchronized TodoStore getInstance(Context context) {
         if (sInstance == null) {
@@ -81,19 +75,22 @@ public class TodoStore {
         }
     }
 
-    public Todo get(final int position) {
-        return mTodoList.get(position);
+    public void filterBy(String filterString) {
+        mFilter = filterString;
+        for (OnTodoListFilterListener listener : mFilterListeners) {
+            if (listener != null)
+                listener.onTodoListFilter(filterString, true);
+        }
+        load();
     }
 
-    public boolean contains(final Todo todo) {
-        if (todo == null)
-            return false;
-
-        for (Todo item : mTodoList) {
-            if (item.getId() == todo.getId())
-                return true;
+    public void clearFilter() {
+        mFilter = FILTER_DEFAULT;
+        for (OnTodoListFilterListener listener : mFilterListeners) {
+            if (listener != null)
+                listener.onTodoListFilter(FILTER_DEFAULT, false);
         }
-        return false;
+        load();
     }
 
     public Todo getById(final long id) {
@@ -109,26 +106,43 @@ public class TodoStore {
     }
 
     public void load() {
-        mTodoList = mDbHelper.getTodos();
-        Log.d(TAG, mTodoList.toString());
+        if (mFilter.equals(FILTER_DEFAULT)) {
+            mTodoList = mDbHelper.getTodos();
+        } else {
+            mTodoList = mDbHelper.getTodosByFilter(mFilter);
+        }
         Log.i(TAG, String.format("loaded %d todos", mTodoList.size()));
         notifyDataSetChanged();
     }
 
-    public void sort() {
-        Collections.sort(mTodoList, mObjComparator);
-    }
-
     public void notifyDataSetChanged() {
-        if (mListener != null)
-            mListener.onTodoListUpdate();
+        for (OnTodoListUpdateListener listener : mListListeners) {
+            if (listener != null)
+                listener.onTodoListUpdate();
+        }
     }
 
-    public void setOnTodoListUpdateListener(OnTodoListUpdateListener listener) {
-        mListener = listener;
+    public void addOnTodoListUpdateListener(OnTodoListUpdateListener listener) {
+        mListListeners.add(listener);
+    }
+
+    public void removeOnTodoListUpdateListener(OnTodoListUpdateListener listener) {
+        mListListeners.remove(listener);
+    }
+
+    public void addOnTodoListFilterListener(OnTodoListFilterListener listener) {
+        mFilterListeners.add(listener);
+    }
+
+    public void removeSetTodoListFilterListener(OnTodoListFilterListener listener) {
+        mFilterListeners.remove(listener);
     }
 
     public interface OnTodoListUpdateListener {
         void onTodoListUpdate();
+    }
+
+    public interface OnTodoListFilterListener {
+        void onTodoListFilter(String filter, boolean enabled);
     }
 }

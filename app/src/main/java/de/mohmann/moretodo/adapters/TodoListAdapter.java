@@ -2,6 +2,7 @@ package de.mohmann.moretodo.adapters;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +30,6 @@ import de.mohmann.moretodo.util.Utils;
 public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickListener {
 
     final public static String TAG = "TodoListAdapter";
-
-    final public static String FILTER_DEFAULT = "";
 
     final public static String LIST_ALL = "all";
     final public static String LIST_DONE = "done";
@@ -72,11 +71,15 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
         mOriginalTodoList = items;
         mFilteredTodoList.addAll(items);
         mListType = listType;
-        mFilterString = FILTER_DEFAULT;
+        mFilterString = TodoStore.FILTER_DEFAULT;
     }
 
     public Comparator<Todo> getComparator() {
         return mComparator;
+    }
+
+    public void setList(List<Todo> list) {
+        mOriginalTodoList = list;
     }
 
     @Override
@@ -224,8 +227,6 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults result = new FilterResults();
             List<Todo> items;
-
-            constraint = constraint.toString();
 
             if (mListType.equals(LIST_DONE)) {
                 items = getDoneItems(true);

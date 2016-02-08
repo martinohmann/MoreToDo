@@ -1,6 +1,8 @@
 package de.mohmann.moretodo.activities;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -9,11 +11,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.mohmann.moretodo.R;
@@ -27,7 +33,8 @@ import de.mohmann.moretodo.util.Utils;
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener,
         DialogInterface.OnClickListener,
-        ViewPager.OnPageChangeListener {
+        ViewPager.OnPageChangeListener,
+        TodoStore.OnTodoListFilterListener {
 
     final public static String TAG = "MainActivity";
 
@@ -35,6 +42,11 @@ public class MainActivity extends AppCompatActivity
     private AlertDialog mDeleteDialog;
 
     private TabLayout mTabLayout;
+    private FrameLayout mSearchFilter;
+    private TextView mSearchFilterText;
+    private ViewPager mViewPager;
+
+    private SearchView mSearchView;
 
     final private int[] mTabIcons = {
             R.drawable.ic_list_white_18dp,
@@ -62,16 +74,24 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         mTodoStore = TodoStore.getInstance(this);
+        mTodoStore.addOnTodoListFilterListener(this);
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-        viewPager.addOnPageChangeListener(this);
+        final ImageView searchFilterClear = (ImageView) findViewById(R.id.search_filter_clear);
+        searchFilterClear.setOnClickListener(this);
+
+        mSearchFilter = (FrameLayout) findViewById(R.id.search_filter);
+        mSearchFilterText = (TextView) findViewById(R.id.search_filter_text);
+
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(mViewPager);
+        mViewPager.addOnPageChangeListener(this);
 
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
-        mTabLayout.setupWithViewPager(viewPager);
+        mTabLayout.setupWithViewPager(mViewPager);
+
         setupTabIcons();
         setTabAlpha(0);
 
@@ -79,6 +99,42 @@ public class MainActivity extends AppCompatActivity
 
         /* start notification service */
         startService(new Intent(this, NotificationService.class));
+
+        /* handle search intent */
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            mTodoStore.filterBy(query);
+            resetSearchView();
+        }
+    }
+
+    @Override
+    public void onTodoListFilter(String filterString, boolean enabled) {
+        if (enabled) {
+            mSearchFilterText.setText(filterString);
+            mSearchFilter.setVisibility(View.VISIBLE);
+            Utils.setMargins(mViewPager, 0, mSearchFilter.getHeight(), 0, 0);
+        } else {
+            Utils.setMargins(mViewPager, 0, 0, 0, 0);
+            mSearchFilter.setVisibility(View.GONE);
+            resetSearchView();
+        }
+    }
+
+    private void resetSearchView() {
+        mSearchView.clearFocus();
+        mSearchView.setQuery("", false);
+        mSearchView.setIconified(true);
+        invalidateOptionsMenu();
     }
 
     private void setTabAlpha(int position) {
@@ -116,7 +172,6 @@ public class MainActivity extends AppCompatActivity
                     res.getString(mTabLabels[i]));
         }
         viewPager.setAdapter(adapter);
-        mTodoStore.setOnTodoListUpdateListener(adapter);
     }
 
     private void buildDeleteDialog() {
@@ -145,9 +200,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(this, EditActivity.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+        if (view.getId() == R.id.fab) {
+            Intent intent = new Intent(this, EditActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+        } else if (view.getId() == R.id.search_filter_clear) {
+            mTodoStore.clearFilter();
+        }
     }
 
     @Override
@@ -167,6 +226,13 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        // Associate searchable configuration with the SearchView
+        final SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        mSearchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         return true;
     }
 
@@ -192,5 +258,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mTodoStore.removeSetTodoListFilterListener(this);
     }
 }

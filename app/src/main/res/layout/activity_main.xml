@@ -33,9 +33,64 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!--<include layout="@layout/content_main" />-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/search_filter"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@color/search_filter_background"
+        android:visibility="gone">
+
+        <include layout="@layout/toolbar_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="4dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/search_filter_inner"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/search_filter_label"
+                android:id="@+id/search_filter_label"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/search_filter_text"
+                android:id="@+id/search_filter_text"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/search_filter_label"
+                android:gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/search_filter_clear"
+                android:maxWidth="18dp"
+                android:minWidth="18dp"
+                android:minHeight="18dp"
+                android:maxHeight="18dp"
+                android:src="@drawable/ic_clear_black_18dp"
+                android:alpha="0.5"
+                android:contentDescription="@string/icon"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

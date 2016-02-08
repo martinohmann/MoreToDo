@@ -2,6 +2,8 @@ package de.mohmann.moretodo.util;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 /**
@@ -45,5 +47,13 @@ public class Utils {
 
     public static boolean isEmpty(CharSequence str) {
         return str == null || str.length() == 0;
+    }
+
+    public static void setMargins (View v, int l, int t, int r, int b) {
+        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            p.setMargins(l, t, r, b);
+            v.requestLayout();
+        }
     }
 }

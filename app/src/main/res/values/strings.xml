@@ -55,6 +55,10 @@
     <string name="label_tab_pending">Pending</string>
     <string name="label_tab_done">Done</string>
 
+    <string name="search_hint">Search</string>
+    <string name="search_filter_label">Filter:</string>
+    <string name="search_filter_text">none</string>
+
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->

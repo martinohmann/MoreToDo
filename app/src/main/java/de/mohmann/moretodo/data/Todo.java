@@ -144,12 +144,16 @@ public class Todo implements Comparable<Todo>, Parcelable {
         return done;
     }
 
-    public void setDone(boolean done) {
-        if (done) {
+    public void setDone(boolean done, boolean setFinishTime) {
+        if (done && setFinishTime) {
             Log.d(TAG, "finishDate " + toString());
             finishDate = System.currentTimeMillis();
         }
         this.done = done;
+    }
+
+    public void setDone(boolean done) {
+        setDone(done, true);
     }
 
     public boolean isNotified() {

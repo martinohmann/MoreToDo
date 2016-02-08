@@ -15,6 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import java.util.List;
 
 import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.activities.DetailActivity;
@@ -25,7 +29,7 @@ import de.mohmann.moretodo.data.TodoStore;
 import de.mohmann.moretodo.util.Utils;
 
 public class TodoListFragment extends Fragment implements AdapterView.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener, TodoStore.OnTodoListUpdateListener {
 
     final public static String TAG = "TodoListFragment";
     final public static String EXTRA_FILTER =
@@ -52,6 +56,7 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
         String filterName = bundle.getString(EXTRA_FILTER, TodoListAdapter.LIST_ALL);
 
         mTodoStore = TodoStore.getInstance(getContext());
+        mTodoStore.addOnTodoListUpdateListener(this);
         mTodoListAdapter = new TodoListAdapter(getActivity(), R.layout.todo_list_item,
                 mTodoStore.getList(), filterName);
         mTodoListAdapter.applyFilter();
@@ -85,6 +90,20 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
         intent.putExtra(Todo.EXTRA_TODO, (Todo) view.getTag(R.id.TAG_TODO));
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+    }
+
+
+    private void updateViews() {
+        if (mTodoListAdapter != null) {
+            mTodoListAdapter.setList(mTodoStore.getList());
+            mTodoListAdapter.applyFilter();
+        }
+    }
+
+    @Override
+    public void onTodoListUpdate() {
+        Log.d(TAG, "onTodoListUpdate");
+        updateViews();
     }
 
     @Override
@@ -134,9 +153,9 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
         updateViews();
     }
 
-    public void updateViews() {
-        if (mTodoListAdapter != null) {
-            mTodoListAdapter.applyFilter();
-        }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mTodoStore.removeOnTodoListUpdateListener(this);
     }
 }
