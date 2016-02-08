@@ -49,8 +49,18 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
                 return -1;
             if (mListType.equals(LIST_ALL))
                 return t1.getCreationDate() > t2.getCreationDate() ? -1 : 1;
-            if (mListType.equals(LIST_PENDING))
-                return t1.getCreationDate() > t2.getCreationDate() ? 1 : -1;
+            if (mListType.equals(LIST_PENDING)) {
+                if (t1.getDueDate() == Todo.DATE_UNSET && t2.getDueDate() == Todo.DATE_UNSET) {
+                    return t1.getCreationDate() > t2.getCreationDate() ? 1 : -1;
+                }
+                if (t1.getDueDate() == Todo.DATE_UNSET) {
+                    return 1;
+                }
+                if (t2.getDueDate() == Todo.DATE_UNSET) {
+                    return -1;
+                }
+                return t1.getDueDate() > t2.getDueDate() ? 1 : -1;
+            }
             if (mListType.equals(LIST_DONE))
                 return t1.getFinishDate() > t2.getFinishDate() ? -1 : 1;
             return -1;
