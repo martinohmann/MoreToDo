@@ -9,5 +9,6 @@
     <color name="colorGradientStart">#55000000</color>
 
     <color name="colorTextLink">#000000</color>
+
     <color name="tab_text_color">#ffffff</color>
 </resources>

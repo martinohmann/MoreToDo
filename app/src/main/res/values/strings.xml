@@ -37,6 +37,7 @@
     <string name="label_due_date">Due date</string>
     <string name="label_use_due_date">Use due date</string>
 
+    <string name="text_not_done_yet">not done yet</string>
     <string name="text_empty">-</string>
     <string name="icon">Icon</string>
 

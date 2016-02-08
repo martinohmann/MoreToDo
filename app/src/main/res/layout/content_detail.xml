@@ -122,12 +122,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/text_empty"
+                android:text="@string/text_not_done_yet"
                 android:id="@+id/text_finished"
                 android:layout_below="@+id/label_done"
                 android:layout_toEndOf="@+id/icon_done"
-                android:layout_marginStart="5dp"
-                android:visibility="gone" />
+                android:layout_marginStart="5dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

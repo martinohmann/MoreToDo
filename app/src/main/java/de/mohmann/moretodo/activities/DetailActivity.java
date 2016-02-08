@@ -93,10 +93,11 @@ public class DetailActivity extends AppCompatActivity
         if (mTodo.isDone()) {
             mDoneView.setImageResource(R.drawable.ic_done_black_18dp);
             mFinishedView.setText(DateFormatter.getFullDate(mTodo.getFinishDate()));
-            mFinishedView.setVisibility(View.VISIBLE);
         }
 
-        if (mTodo.getDueDate() > -1) {
+        if (mTodo.getDueDate() == Todo.DATE_UNSET) {
+            mContainerDueDate.setVisibility(View.GONE);
+        } else {
             mDueDateView.setText(DateFormatter.getFullDate(mTodo.getDueDate()));
             mContainerDueDate.setVisibility(View.VISIBLE);
         }

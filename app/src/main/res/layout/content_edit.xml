@@ -32,7 +32,7 @@
                 android:id="@+id/label_title"
                 android:labelFor="@+id/input_title" />
 
-            <EditText
+            <de.mohmann.moretodo.widgets.ClearableEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/input_title"
@@ -59,46 +59,31 @@
                 android:id="@+id/input_content"
                 android:layout_below="@+id/label_content" />
 
-            <CheckBox
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_use_due_date"
-                android:textColor="@color/colorTodoTextLight"
-                android:id="@+id/checkbox_due_date"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/label_due_date"
+                android:id="@+id/label_due_date"
+                android:labelFor="@+id/input_due_date"
                 android:layout_below="@+id/input_content"
                 android:layout_marginTop="20dp" />
 
-            <RelativeLayout
-                android:id="@+id/container_due_date"
+            <de.mohmann.moretodo.widgets.ClearableEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/checkbox_due_date"
-                android:layout_marginTop="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="@string/label_due_date"
-                    android:id="@+id/label_due_date"
-                    android:labelFor="@+id/input_due_date" />
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="date"
-                    android:ems="10"
-                    android:singleLine="true"
-                    android:maxLines="1"
-                    android:id="@+id/input_due_date"
-                    android:layout_below="@+id/label_due_date"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false" />
-
-            </RelativeLayout>
+                android:inputType="date"
+                android:ems="10"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:id="@+id/input_due_date"
+                android:layout_below="@+id/label_due_date"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
 
         </RelativeLayout>
     </ScrollView>
+
 </RelativeLayout>
 
