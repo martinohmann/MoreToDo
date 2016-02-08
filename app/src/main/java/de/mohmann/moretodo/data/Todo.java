@@ -172,7 +172,9 @@ public class Todo implements Comparable<Todo>, Parcelable {
     }
 
     public String toString() {
-        return String.format("<Todo> id: %s, done: %s, title: %s, created: %d, finished: %d, due: %d, notified: %s",
-                id, done, title, creationDate, finishDate, dueDate, notified);
+        return String.format("<Todo id: %s, title: \"%s\", content: \"%s\",\n" +
+                        "creationDate: %d, finishDate: %d, dueDate: %d,\n" +
+                        "done: %s, notified: %s>",
+                id, title, content, creationDate, finishDate, dueDate, done, notified);
     }
 }
