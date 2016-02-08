@@ -16,8 +16,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.Comparator;
-
 import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.activities.DetailActivity;
 import de.mohmann.moretodo.activities.EditActivity;
@@ -51,12 +49,12 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
                              Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         View view = inflater.inflate(R.layout.fragment_todo_list, container, false);
-        String filterName = bundle.getString(EXTRA_FILTER, TodoListAdapter.FILTER_ALL);
+        String filterName = bundle.getString(EXTRA_FILTER, TodoListAdapter.LIST_ALL);
 
-        mTodoStore = TodoStore.getInstance();
+        mTodoStore = TodoStore.getInstance(getContext());
         mTodoListAdapter = new TodoListAdapter(getActivity(), R.layout.todo_list_item,
                 mTodoStore.getList(), filterName);
-        mTodoListAdapter.applyDefaultFilter();
+        mTodoListAdapter.applyFilter();
 
         final ListView listView = (ListView) view.findViewById(R.id.todo_list);
         listView.setEmptyView(view.findViewById(R.id.todo_list_empty));
@@ -124,7 +122,6 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
                     Utils.toast(getActivity(), R.string.message_todo_deleted);
 
                     mTodoStore.removeById(todo.getId());
-                    mTodoStore.persist();
                     break;
             }
         }
@@ -139,7 +136,7 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
 
     public void updateViews() {
         if (mTodoListAdapter != null) {
-            mTodoListAdapter.applyDefaultFilter();
+            mTodoListAdapter.applyFilter();
         }
     }
 }

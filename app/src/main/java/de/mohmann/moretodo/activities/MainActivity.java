@@ -1,39 +1,27 @@
 package de.mohmann.moretodo.activities;
 
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.adapters.TodoListAdapter;
 import de.mohmann.moretodo.adapters.ViewPagerAdapter;
-import de.mohmann.moretodo.data.Todo;
 import de.mohmann.moretodo.data.TodoStore;
 import de.mohmann.moretodo.fragments.TodoListFragment;
-import de.mohmann.moretodo.util.DateFormatter;
+import de.mohmann.moretodo.services.NotificationService;
 import de.mohmann.moretodo.util.Utils;
 
 public class MainActivity extends AppCompatActivity
@@ -61,14 +49,10 @@ public class MainActivity extends AppCompatActivity
     };
 
     final private String[] mTabFilters = {
-            TodoListAdapter.FILTER_ALL,
-            TodoListAdapter.FILTER_PENDING,
-            TodoListAdapter.FILTER_DONE
+            TodoListAdapter.LIST_ALL,
+            TodoListAdapter.LIST_PENDING,
+            TodoListAdapter.LIST_DONE
     };
-
-    final public static String EXTRA_NOTIFICATION_ID =
-            "de.mohmann.moretodo.activities.MainActivity.NOTIFICATION_ID";
-    private static int mNotificationId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +61,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mTodoStore = TodoStore.getInstance();
-        mTodoStore.setPreferences(getPreferences(Context.MODE_PRIVATE));
-        mTodoStore.load();
+        mTodoStore = TodoStore.getInstance(this);
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
@@ -94,33 +76,9 @@ public class MainActivity extends AppCompatActivity
         setTabAlpha(0);
 
         buildDeleteDialog();
-        runBackgroundTasks();
-    }
 
-    private void runBackgroundTasks() {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG, String.format("[%s] %s",
-                                DateFormatter.getFullDate(System.currentTimeMillis()),
-                                "background task"));
-
-                        for (Todo todo : mTodoStore.getList()) {
-                            if (!todo.isDone() && todo.getDueDate() != Todo.NO_DUEDATE && !todo.isNotified()) {
-                                if (todo.getDueDate() <= System.currentTimeMillis()) {
-                                    sendNotification(todo);
-                                    todo.setNotified(true);
-                                    mTodoStore.persist();
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        }, 0, 30000);
+        /* start notification service */
+        startService(new Intent(this, NotificationService.class));
     }
 
     private void setTabAlpha(int position) {
@@ -170,52 +128,6 @@ public class MainActivity extends AppCompatActivity
         mDeleteDialog = builder.create();
     }
 
-
-    private void sendNotification(Todo todo) {
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-
-        String date = DateFormatter.getFullDate(todo.getDueDate());
-        builder.setDefaults(Notification.DEFAULT_ALL);
-        builder.setContentTitle(todo.getTitle());
-
-        if (!todo.getContent().isEmpty()) {
-            builder.setContentText(Utils.shorten(todo.getContent(), 30, true));
-        }
-
-        builder.setSubText(date);
-        builder.setSmallIcon(R.drawable.ic_assignment_white_48dp);
-
-        builder.setTicker(String.format("%s: %s", date, todo.getTitle()));
-
-        builder.setAutoCancel(false);
-        builder.setOngoing(false);
-
-        /* set vibration parameters */
-        builder.setVibrate(new long[]{0, 500, 50, 2000});
-
-        /* create new intent for notification with device and notification id as payload */
-        Intent resultIntent = new Intent(this, DetailActivity.class);
-        resultIntent.putExtra(MainActivity.EXTRA_NOTIFICATION_ID, mNotificationId);
-        resultIntent.putExtra(Todo.EXTRA_TODO, todo);
-
-        /* create stackbuilder, add back stack, and add intent to the top of the stack */
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(DetailActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-
-        /* gets a PendingIntent containing the entire back stack */
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(mNotificationId, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        /* add intent to notification */
-        builder.setContentIntent(resultPendingIntent);
-
-        /* deploy */
-        notificationManager.notify(mNotificationId++, builder.build());
-    }
-
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         /* unused */
@@ -245,8 +157,6 @@ public class MainActivity extends AppCompatActivity
 
         if (id == DialogInterface.BUTTON_POSITIVE) {
             mTodoStore.removeDone();
-            mTodoStore.persist();
-
             Utils.toast(this, R.string.message_todos_deleted);
         } else {
             dialog.dismiss();

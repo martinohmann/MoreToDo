@@ -56,6 +56,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         mCheckBoxDueDate.setOnClickListener(this);
 
         mCalendar = Calendar.getInstance();
+        mCalendar.set(Calendar.SECOND, 0);
+        mCalendar.set(Calendar.MILLISECOND, 0);
 
         /* get intent data */
         mTodo = getIntent().getParcelableExtra(Todo.EXTRA_TODO);
@@ -70,10 +72,12 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
            showDatePickerDialog();
        } else if (view.getId() == R.id.checkbox_due_date) {
            if (mCheckBoxDueDate.isChecked()) {
-               mContainerDueDate.setVisibility(View.VISIBLE);
+               mContainerDueDate.setAlpha(1f);
+               mInputDueDate.setClickable(true);
                showDatePickerDialog();
            } else {
-               mContainerDueDate.setVisibility(View.GONE);
+               mContainerDueDate.setAlpha(0.3f);
+               mInputDueDate.setClickable(false);
            }
        } else if (view.getId() == R.id.toolbar) {
            onBackPressed();
@@ -83,19 +87,22 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     private void populateViews() {
         if (mTodo == null) {
             setTitle(getResources().getString(R.string.title_activity_new));
-            mContainerDueDate.setVisibility(View.GONE);
+            mContainerDueDate.setAlpha(0.3f);
+            mInputDueDate.setClickable(false);
         } else {
             mInputTitle.setText(mTodo.getTitle());
             mInputContent.setText(mTodo.getContent());
 
-            if (mTodo.getDueDate() != Todo.NO_DUEDATE) {
+            if (mTodo.getDueDate() != Todo.DATE_UNSET) {
                 mCheckBoxDueDate.setChecked(true);
-                mContainerDueDate.setVisibility(View.VISIBLE);
+                mContainerDueDate.setAlpha(1f);
+                mInputDueDate.setClickable(true);
 
                 mCalendar.setTimeInMillis(mTodo.getDueDate());
                 mInputDueDate.setText(DateFormatter.getFullDate(mTodo.getDueDate()));
             } else {
-                mContainerDueDate.setVisibility(View.GONE);
+                mContainerDueDate.setAlpha(0.3f);
+                mInputDueDate.setClickable(false);
             }
         }
     }
@@ -144,7 +151,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
         mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         mCalendar.set(Calendar.MINUTE, minute);
-        mCalendar.set(Calendar.SECOND, 0);
         mInputDueDate.setText(DateFormatter.getFullDate(mCalendar.getTime()));
         Log.d(TAG, mCalendar.getTime().toString());
     }
@@ -170,10 +176,10 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
         if (id == R.id.action_save) {
             Todo todo;
-            TodoStore todoStore = TodoStore.getInstance();
+            TodoStore todoStore = TodoStore.getInstance(this);
             String title = mInputTitle.getText().toString().trim();
             String content = mInputContent.getText().toString().trim();
-            long dueDate = Todo.NO_DUEDATE;
+            long dueDate = Todo.DATE_UNSET;
 
             if (mCheckBoxDueDate.isChecked()) {
                 if (mInputDueDate.getText().toString().isEmpty()) {
@@ -200,9 +206,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 todo.setDueDate(dueDate);
                 if (dueDate > System.currentTimeMillis())
                     todo.setNotified(false);
+                todoStore.save(todo);
                 Utils.toast(this, R.string.message_todo_updated);
             }
-            todoStore.persist();
 
             finish();
         }

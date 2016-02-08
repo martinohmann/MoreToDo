@@ -24,17 +24,17 @@
             android:paddingRight="16dp"
             android:smoothScrollbar="true" />
 
-        <TextView android:id="@+id/todo_list_empty"
-            android:layout_width="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/todo_list_empty"
-            android:textAlignment="center"
-            android:textColor="@color/colorTodoTextLight"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical" />
-
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <include layout="@layout/toolbar_shadow" />
+
+    <TextView android:id="@+id/todo_list_empty"
+        android:layout_width="match_parent"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/todo_list_empty"
+        android:textAlignment="center"
+        android:textColor="@color/colorTodoTextLight"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical" />
 
 </FrameLayout>

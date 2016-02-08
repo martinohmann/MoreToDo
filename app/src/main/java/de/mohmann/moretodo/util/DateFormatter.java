@@ -52,7 +52,7 @@ public class DateFormatter {
                 adjusted = diff / 3600;
                 humanDate = String.format("%d hour%s ago", adjusted, pluralSuffix(adjusted));
             } else if (diff < 604800) {
-                adjusted = diff / 604800;
+                adjusted = diff / 86400;
                 humanDate = String.format("%d day%s ago", adjusted, pluralSuffix(adjusted));
             } else {
                 humanDate = getShortDate(date);

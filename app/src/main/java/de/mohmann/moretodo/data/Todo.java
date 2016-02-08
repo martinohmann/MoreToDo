@@ -6,9 +6,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.util.Date;
-import java.util.UUID;
-
 /**
  * Created by mohmann on 2/3/16.
  */
@@ -16,16 +13,28 @@ public class Todo implements Comparable<Todo>, Parcelable {
 
     final public static String TAG = "Todo";
 
-    final public static int NO_DUEDATE = -1;
+    final public static int DATE_UNSET = -1;
+    final public static int ID_UNSET = -1;
 
-    private String id = UUID.randomUUID().toString();
+    private long id = ID_UNSET;
     private String title = "";
     private String content = "";
-    private long created = System.currentTimeMillis();
-    private long finished = 0;
-    private long dueDate = NO_DUEDATE;
+    private long creationDate = System.currentTimeMillis();
+    private long finishDate = DATE_UNSET;
+    private long dueDate = DATE_UNSET;
     private boolean done = false;
     private boolean notified = false;
+
+    final public static String TABLE_NAME = "todos";
+    final public static String COLUMN_ID = "id";
+    final public static String COLUMN_TITLE = "title";
+    final public static String COLUMN_CONTENT = "content";
+    final public static String COLUMN_CREATION_DATE = "creation_date";
+    final public static String COLUMN_FINISH_DATE = "finish_date";
+    final public static String COLUMN_DUE_DATE = "due_date";
+    final public static String COLUMN_DONE = "done";
+    final public static String COLUMN_NOTIFIED = "notified";
+
 
     final public static String EXTRA_TODO = "de.mohmann.moretodo.Todo";
 
@@ -54,13 +63,13 @@ public class Todo implements Comparable<Todo>, Parcelable {
 
     protected Todo(final Parcel in) {
         final Bundle b = in.readBundle(getClass().getClassLoader());
-        id = b.getString(PARCEL_EXTRA_ID, UUID.randomUUID().toString());
+        id = b.getLong(PARCEL_EXTRA_ID, ID_UNSET);
         title = b.getString(PARCEL_EXTRA_TITLE, "");
         content = b.getString(PARCEL_EXTRA_CONTENT, "");
         done = b.getBoolean(PARCEL_EXTRA_DONE, false);
-        created = b.getLong(PARCEL_EXTRA_CREATED, 0);
-        finished = b.getLong(PARCEL_EXTRA_FINISHED, 0);
-        dueDate = b.getLong(PARCEL_EXTRA_DUEDATE, NO_DUEDATE);
+        creationDate = b.getLong(PARCEL_EXTRA_CREATED, System.currentTimeMillis());
+        finishDate = b.getLong(PARCEL_EXTRA_FINISHED, DATE_UNSET);
+        dueDate = b.getLong(PARCEL_EXTRA_DUEDATE, DATE_UNSET);
     }
 
     @Override
@@ -71,21 +80,21 @@ public class Todo implements Comparable<Todo>, Parcelable {
     @Override
     public void writeToParcel(final Parcel parcel, final int arg1) {
         final Bundle b = new Bundle(getClass().getClassLoader());
-        b.putString(PARCEL_EXTRA_ID, id);
+        b.putLong(PARCEL_EXTRA_ID, id);
         b.putString(PARCEL_EXTRA_TITLE, title);
         b.putString(PARCEL_EXTRA_CONTENT, content);
         b.putBoolean(PARCEL_EXTRA_DONE, done);
-        b.putLong(PARCEL_EXTRA_CREATED, created);
-        b.putLong(PARCEL_EXTRA_FINISHED, finished);
+        b.putLong(PARCEL_EXTRA_CREATED, creationDate);
+        b.putLong(PARCEL_EXTRA_FINISHED, finishDate);
         b.putLong(PARCEL_EXTRA_DUEDATE, dueDate);
         parcel.writeBundle(b);
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -105,12 +114,20 @@ public class Todo implements Comparable<Todo>, Parcelable {
         this.content = content;
     }
 
-    public long getCreated() {
-        return created;
+    public long getCreationDate() {
+        return creationDate;
     }
 
-    public long getFinished() {
-        return finished;
+    public void setCreationDate(long creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public long getFinishDate() {
+        return finishDate;
+    }
+
+    public void setFinishDate(long finishDate) {
+        this.finishDate = finishDate;
     }
 
     public long getDueDate() {
@@ -127,8 +144,8 @@ public class Todo implements Comparable<Todo>, Parcelable {
 
     public void setDone(boolean done) {
         if (done) {
-            Log.d(TAG, "finished " + toString());
-            finished = System.currentTimeMillis();
+            Log.d(TAG, "finishDate " + toString());
+            finishDate = System.currentTimeMillis();
         }
         this.done = done;
     }
@@ -149,12 +166,13 @@ public class Todo implements Comparable<Todo>, Parcelable {
             return 1;
         /* both done */
         if (done)
-            return finished > another.getFinished() ? 1 : -1;
+            return finishDate > another.getFinishDate() ? 1 : -1;
         /* both not done */
-        return created > another.getCreated() ? 1 : -1;
+        return creationDate > another.getCreationDate() ? 1 : -1;
     }
 
     public String toString() {
-        return String.format("<Todo> id: %s, done: %s, title: %s", id, done, title);
+        return String.format("<Todo> id: %s, done: %s, title: %s, created: %d, finished: %d, due: %d, notified: %s",
+                id, done, title, creationDate, finishDate, dueDate, notified);
     }
 }

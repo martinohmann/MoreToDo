@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +19,7 @@ import android.widget.TextView;
 import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.data.Todo;
 import de.mohmann.moretodo.data.TodoStore;
+import de.mohmann.moretodo.services.NotificationService;
 import de.mohmann.moretodo.util.DateFormatter;
 import de.mohmann.moretodo.util.Utils;
 
@@ -40,6 +40,7 @@ public class DetailActivity extends AppCompatActivity
     private AlertDialog mDeleteDialog;
 
     private Todo mTodo;
+    private TodoStore mTodoStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +57,12 @@ public class DetailActivity extends AppCompatActivity
         mContainerDueDate = (RelativeLayout) findViewById(R.id.container_due_date);
         mDueDateView = (TextView) findViewById(R.id.text_due_date);
 
+        mTodoStore = TodoStore.getInstance(this);
+
         /* get intent data */
         mTodo = getIntent().getParcelableExtra(Todo.EXTRA_TODO);
 
-        final int notificationId = getIntent().getIntExtra(MainActivity.EXTRA_NOTIFICATION_ID, -1);
+        final int notificationId = getIntent().getIntExtra(NotificationService.EXTRA_NOTIFICATION_ID, -1);
 
         if (notificationId > -1) {
             final NotificationManager notificationManager =
@@ -83,14 +86,13 @@ public class DetailActivity extends AppCompatActivity
             mContainerContent.setVisibility(View.GONE);
         } else {
             mContainerContent.setVisibility(View.VISIBLE);
-            //mContentView.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
-        mCreatedView.setText(DateFormatter.getFullDate(mTodo.getCreated()));
+        mCreatedView.setText(DateFormatter.getFullDate(mTodo.getCreationDate()));
 
         if (mTodo.isDone()) {
             mDoneView.setImageResource(R.drawable.ic_done_black_18dp);
-            mFinishedView.setText(DateFormatter.getFullDate(mTodo.getFinished()));
+            mFinishedView.setText(DateFormatter.getFullDate(mTodo.getFinishDate()));
             mFinishedView.setVisibility(View.VISIBLE);
         }
 
@@ -137,9 +139,7 @@ public class DetailActivity extends AppCompatActivity
             return;
 
         if (id == DialogInterface.BUTTON_POSITIVE) {
-            TodoStore todoStore = TodoStore.getInstance();
-            todoStore.removeById(mTodo.getId());
-            todoStore.persist();
+            mTodoStore.removeById(mTodo.getId());
 
             Utils.toast(this, R.string.message_todo_deleted);
             finish();
@@ -165,8 +165,6 @@ public class DetailActivity extends AppCompatActivity
         if (mTodo == null)
             return true;
 
-        TodoStore todoStore = TodoStore.getInstance();
-
         if (id == R.id.action_edit) {
             Intent intent = new Intent(this, EditActivity.class);
             intent.putExtra(Todo.EXTRA_TODO, mTodo);
@@ -179,7 +177,7 @@ public class DetailActivity extends AppCompatActivity
                 return true;
 
             mTodo.setDone(true);
-            todoStore.persist();
+            mTodoStore.save(mTodo);
 
             Utils.toast(this, R.string.message_todo_done);
 
@@ -195,7 +193,7 @@ public class DetailActivity extends AppCompatActivity
 
         if (mTodo != null) {
             /* update todo item */
-            mTodo = TodoStore.getInstance().getById(mTodo.getId());
+            mTodo = mTodoStore.getById(mTodo.getId());
             populateViews();
         }
     }

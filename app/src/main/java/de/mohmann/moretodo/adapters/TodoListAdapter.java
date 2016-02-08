@@ -30,39 +30,39 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
 
     final public static String TAG = "TodoListAdapter";
 
-    final public static String FILTER_ALL = "all";
-    final public static String FILTER_DONE = "done";
-    final public static String FILTER_PENDING = "pending";
+    final public static String FILTER_DEFAULT = "";
+
+    final public static String LIST_ALL = "all";
+    final public static String LIST_DONE = "done";
+    final public static String LIST_PENDING = "pending";
 
     private Filter mFilter;
     private List<Todo> mOriginalTodoList;
     private List<Todo> mFilteredTodoList = new ArrayList<>();
-    public String mDefaultFilter;
+    private String mListType;
+    private String mFilterString;
 
     private Comparator<Todo> mComparator = new Comparator<Todo>() {
         @Override
         public int compare(Todo t1, Todo t2) {
             if (t1 == null || t2 == null)
                 return -1;
-            if (mDefaultFilter.equals(FILTER_ALL))
-                return t1.getCreated() > t2.getCreated() ? -1 : 1;
-            if (mDefaultFilter.equals(FILTER_PENDING))
-                return t1.getCreated() > t2.getCreated() ? 1 : -1;
-            if (mDefaultFilter.equals(FILTER_DONE))
-                return t1.getFinished() > t2.getFinished() ? -1 : 1;
+            if (mListType.equals(LIST_ALL))
+                return t1.getCreationDate() > t2.getCreationDate() ? -1 : 1;
+            if (mListType.equals(LIST_PENDING))
+                return t1.getCreationDate() > t2.getCreationDate() ? 1 : -1;
+            if (mListType.equals(LIST_DONE))
+                return t1.getFinishDate() > t2.getFinishDate() ? -1 : 1;
             return -1;
         }
     };
 
-    public TodoListAdapter(Context context, int textViewResourceId) {
-        super(context, textViewResourceId);
-    }
-
-    public TodoListAdapter(Context context, int resource, List<Todo> items, String defaultFilter) {
+    public TodoListAdapter(Context context, int resource, List<Todo> items, String listType) {
         super(context, resource, items);
         mOriginalTodoList = items;
         mFilteredTodoList.addAll(items);
-        mDefaultFilter = defaultFilter;
+        mListType = listType;
+        mFilterString = FILTER_DEFAULT;
     }
 
     public Comparator<Todo> getComparator() {
@@ -114,20 +114,20 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
        final int paintFlags = holder.titleView.getPaintFlags();
 
         if (todo.isDone()) {
-            if (!mDefaultFilter.equals(FILTER_DONE)) {
+            if (!mListType.equals(LIST_DONE)) {
                 v.setAlpha(0.3f);
                 holder.titleView.setPaintFlags(paintFlags | Paint.STRIKE_THRU_TEXT_FLAG);
             }
-            holder.dateView.setText(DateFormatter.humanReadable(todo.getFinished()));
+            holder.dateView.setText(DateFormatter.humanReadable(todo.getFinishDate()));
             holder.iconView.setImageResource(R.drawable.ic_done_black_18dp);
         } else {
             v.setAlpha(1f);
             holder.titleView.setPaintFlags(paintFlags & ~Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.dateView.setText(DateFormatter.humanReadable(todo.getCreated()));
+            holder.dateView.setText(DateFormatter.humanReadable(todo.getCreationDate()));
             holder.iconView.setImageResource(R.drawable.ic_add_black_18dp);
         }
 
-        if (!todo.isDone() && todo.getDueDate() != Todo.NO_DUEDATE) {
+        if (!todo.isDone() && todo.getDueDate() != Todo.DATE_UNSET) {
             holder.dueDateContainer.setVisibility(View.VISIBLE);
             holder.dueDate.setText(DateFormatter.humanReadable(todo.getDueDate()));
         } else {
@@ -152,7 +152,7 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
             return;
 
         todo.setDone(!todo.isDone());
-        TodoStore.getInstance().persist();
+        TodoStore.getInstance(getContext()).save(todo);
 
         if (todo.isDone()) {
             Utils.toast(getContext(), R.string.message_todo_done);
@@ -160,11 +160,15 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
             Utils.toast(getContext(), R.string.message_todo_pending);
         }
 
-        applyDefaultFilter();
+        applyFilter();
     }
 
-    public void applyDefaultFilter() {
-        getFilter().filter(mDefaultFilter);
+    public void setFilterString(String filterString) {
+        mFilterString = filterString;
+    }
+
+    public void applyFilter() {
+        getFilter().filter(mFilterString);
     }
 
     @Override
@@ -186,36 +190,37 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
 
     private class TodoFilter extends Filter {
 
-        private FilterResults filterDoneItems(boolean done) {
+        private List<Todo> getDoneItems(boolean done) {
             FilterResults result = new FilterResults();
-            List<Todo> filteredItems = new ArrayList<>();
+            List<Todo> items = new ArrayList<>();
 
             for (Todo todo : mOriginalTodoList) {
                 if (todo.isDone() == done)
-                    filteredItems.add(todo);
+                    items.add(todo);
             }
 
-            result.count = filteredItems.size();
-            result.values = filteredItems;
-
-            return result;
+            return items;
         }
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            constraint = constraint.toString();
             FilterResults result = new FilterResults();
+            List<Todo> items;
 
-            if (constraint.equals(FILTER_DONE)) {
-                result = filterDoneItems(true);
-            } else if (constraint.equals(FILTER_PENDING)) {
-                result = filterDoneItems(false);
+            constraint = constraint.toString();
+
+            if (mListType.equals(LIST_DONE)) {
+                items = getDoneItems(true);
+            } else if (mListType.equals(LIST_PENDING)) {
+                items = getDoneItems(false);
             } else {
                 synchronized(this) {
-                    result.values = mOriginalTodoList;
-                    result.count = mOriginalTodoList.size();
+                    items = mOriginalTodoList;
                 }
             }
+            result.values = items;
+            result.count = items.size();
+
             return result;
         }
 
