@@ -97,6 +97,7 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
             holder.titleView = (TextView) v.findViewById(R.id.title);
             holder.dateView = (TextView) v.findViewById(R.id.date);
             holder.iconView = (ImageView) v.findViewById(R.id.icon);
+            holder.contentIconView = (ImageView) v.findViewById(R.id.content_icon);
             holder.checkBox = (CheckBox) v.findViewById(R.id.done);
             holder.dueDateContainer = (RelativeLayout) v.findViewById(R.id.container_due_date);
             holder.dueDate = (TextView) v.findViewById(R.id.due_date);
@@ -132,6 +133,12 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
             holder.dueDate.setText(DateFormatter.humanReadable(todo.getDueDate()));
         } else {
             holder.dueDateContainer.setVisibility(View.GONE);
+        }
+
+        if (todo.getContent().isEmpty()) {
+            holder.contentIconView.setVisibility(View.GONE);
+        } else {
+            holder.contentIconView.setVisibility(View.VISIBLE);
         }
 
         holder.titleView.setText(todo.getTitle());
@@ -181,6 +188,7 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
 
     private class ViewHolder {
         TextView titleView;
+        ImageView contentIconView;
         TextView dateView;
         ImageView iconView;
         CheckBox checkBox;
@@ -230,7 +238,7 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
             mFilteredTodoList = (ArrayList<Todo>) results.values;
 
             if(mFilteredTodoList != null && mFilteredTodoList.size() > 0) {
-                Collections.sort(mFilteredTodoList, mComparator);
+                Collections.sort(mFilteredTodoList, getComparator());
                 notifyDataSetChanged();
             } else {
                 notifyDataSetInvalidated();

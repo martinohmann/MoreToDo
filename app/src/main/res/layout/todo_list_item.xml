@@ -7,21 +7,40 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/colorTodoText"
-        android:text="@string/property_unknown"
-        android:id="@+id/title"
         android:layout_row="0"
-        android:layout_column="0"
-        android:paddingBottom="5dp"
-        android:height="26dp"
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:maxWidth="330sp" />
+        android:layout_column="0">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorTodoText"
+            android:text="@string/property_unknown"
+            android:id="@+id/title"
+            android:paddingBottom="5dp"
+            android:height="26dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:maxWidth="310sp" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/content_icon"
+            android:maxWidth="18dp"
+            android:minWidth="18dp"
+            android:minHeight="18dp"
+            android:maxHeight="18dp"
+            android:src="@drawable/ic_attach_file_black_18dp"
+            android:alpha="0.5"
+            android:contentDescription="@string/icon"
+            android:layout_toEndOf="@+id/title"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
