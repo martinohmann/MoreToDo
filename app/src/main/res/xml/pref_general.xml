@@ -1,26 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory android:title="Autoremoval">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="autoremove_enable"
+            android:summary="@string/pref_description_autoremove_enable"
+            android:title="@string/pref_title_autoremove_enable" />
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="autoremove_enable"
-        android:summary="@string/pref_description_autoremove_enable"
-        android:title="@string/pref_title_autoremove_enable" />
+        <ListPreference
+            android:defaultValue="86400"
+            android:dependency="autoremove_enable"
+            android:entries="@array/pref_autoremove_list_titles"
+            android:entryValues="@array/pref_autoremove_list_values"
+            android:key="autoremove_interval"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_autoremove_done_todos" />
+    </PreferenceCategory>
 
-    <ListPreference
-        android:defaultValue="86400"
-        android:dependency="autoremove_enable"
-        android:entries="@array/pref_autoremove_list_titles"
-        android:entryValues="@array/pref_autoremove_list_values"
-        android:key="autoremove_interval"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null"
-        android:title="@string/pref_title_autoremove_done_todos" />
+    <PreferenceCategory android:title="Display">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="markdown_enable"
+            android:summary="@string/pref_description_markdown_enable"
+            android:title="@string/pref_title_markdown_enable" />
+    </PreferenceCategory>
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="markdown_enable"
-        android:summary="@string/pref_description_markdown_enable"
-        android:title="@string/pref_title_markdown_enable" />
+    <PreferenceCategory android:title="@string/pref_title_category_application">
+        <Preference
+            android:key="application_version"
+            android:title="@string/pref_title_application_version" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

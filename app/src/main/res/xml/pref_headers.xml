@@ -1,13 +1,29 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- These settings headers are only used on tablets. -->
-
     <header
         android:fragment="de.mohmann.moretodo.activities.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
 
     <header
         android:fragment="de.mohmann.moretodo.activities.SettingsActivity$NotificationPreferenceFragment"
-        android:title="@string/pref_header_notifications" />
+        android:title="@string/pref_header_notifications">
+        <!-- Arbitrary key/value pairs can be included with a header as
+         arguments to its fragment. -->
+        <!--<extra android:name="someKey" android:value="someHeaderValue" />-->
+    </header>
+
+    <header
+        android:title="View project on Github"
+        android:summary="https://github.com/martinohmann/MoreToDo">
+        <intent android:action="android.intent.action.VIEW"
+            android:data="https://github.com/martinohmann/MoreToDo" />
+    </header>
+
+    <!--<header
+        android:title="Export"
+        android:summary="Export todo list as JSON">
+        <intent android:targetPackage="de.mohmann.moretodo"
+            android:targetClass="de.mohmann.moretodo.activities.ExportActivity" />
+    </header>-->
 
 </preference-headers>
