@@ -64,7 +64,7 @@
 
     <string name="title_about_dialog">About</string>
     <string name="about_description">Simple todo app using the material design.</string>
-    <string name="about_credits">\u00A9 2016 Martin Ohmann\nhttps://mohmann.de/\nGithub: https://github.com/martinohmann</string>
+    <string name="about_credits">\u00A9 2016 Martin Ohmann\nhttps://mohmann.de/\n\nGithub: https://github.com/martinohmann/MoreToDo</string>
 
     <!-- Strings related to Settings -->
 
