@@ -9,8 +9,6 @@
     tools:showIn="@layout/activity_detail"
     android:background="@color/detail_background">
 
-    <include layout="@layout/toolbar_shadow" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -264,5 +262,7 @@
 
         </RelativeLayout>
     </ScrollView>
+
+    <include layout="@layout/toolbar_shadow" />
 
 </RelativeLayout>
