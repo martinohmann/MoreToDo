@@ -129,7 +129,7 @@ public class BackgroundService extends Service {
         }
 
         builder.setSubText(date);
-        builder.setSmallIcon(R.drawable.ic_assignment_white_48dp);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
 
         builder.setTicker(String.format("%s: %s", date, todo.getTitle()));
 
