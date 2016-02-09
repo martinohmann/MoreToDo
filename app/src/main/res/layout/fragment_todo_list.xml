@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.TodoListFragment">
+    tools:context=".fragments.TodoListFragment"
+    android:background="@color/list_background">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
@@ -14,7 +15,7 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:divider="@drawable/todo_list_divider"
-            android:dividerHeight="1dp"
+            android:dividerHeight="1sp"
             android:clipToPadding="false"
             android:scrollbarStyle="outsideOverlay"
             android:paddingBottom="80dp"

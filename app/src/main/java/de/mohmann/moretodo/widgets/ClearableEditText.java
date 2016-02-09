@@ -48,7 +48,7 @@ public class ClearableEditText extends AppCompatEditText implements TextWatcher,
 
         mClearIcon = mClearIcon.mutate();
         mClearIcon.setBounds(0, 0, mClearIcon.getIntrinsicWidth(), mClearIcon.getIntrinsicHeight());
-        mClearIcon.setAlpha(70);
+        mClearIcon.setAlpha(80);
 
         setClearIconVisible(false);
         addTextChangedListener(this);

@@ -34,12 +34,12 @@
             android:minHeight="18dp"
             android:maxHeight="18dp"
             android:src="@drawable/ic_attach_file_black_18dp"
-            android:alpha="0.5"
             android:contentDescription="@string/icon"
             android:layout_toEndOf="@+id/title"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:tint="@color/icon_tint_default" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -63,13 +63,14 @@
                 android:minHeight="18dp"
                 android:maxHeight="18dp"
                 android:src="@drawable/ic_add_black_18dp"
-                android:alpha="0.5"
-                android:contentDescription="@string/icon" />
+                android:contentDescription="@string/icon"
+                android:tint="@color/icon_tint_default" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/colorTodoTextLight"
                 android:text="@string/property_unknown"
                 android:id="@+id/date"
                 android:layout_gravity="center_vertical"
@@ -95,13 +96,14 @@
                 android:minHeight="18dp"
                 android:maxHeight="18dp"
                 android:src="@drawable/ic_schedule_black_18dp"
-                android:alpha="0.5"
-                android:contentDescription="@string/icon" />
+                android:contentDescription="@string/icon"
+                android:tint="@color/icon_tint_default" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/colorTodoTextLight"
                 android:text="@string/property_unknown"
                 android:id="@+id/due_date"
                 android:layout_gravity="center_vertical"
