@@ -37,23 +37,20 @@ public class MainActivity extends AppCompatActivity
 
     final public static String TAG = "MainActivity";
 
-    private TodoStore mTodoStore;
-    private AlertDialog mAboutDialog;
-    private AlertDialog mDeleteDialog;
-
-    private TabLayout mTabLayout;
-    private FrameLayout mSearchFilter;
-    private TextView mSearchFilterText;
-    private ViewPager mViewPager;
-
-    private SearchView mSearchView;
-
     final private int[][] mTabOptions = {
             /* icon, label, list type */
             { R.drawable.ic_list_white_18dp, R.string.label_tab_all, TodoListAdapter.LIST_ALL },
             { R.drawable.ic_schedule_white_18dp, R.string.label_tab_pending, TodoListAdapter.LIST_PENDING },
             { R.drawable.ic_done_white_18dp, R.string.label_tab_done, TodoListAdapter.LIST_DONE }
     };
+
+    private AlertDialog mAboutDialog;
+    private AlertDialog mDeleteDialog;
+    private FrameLayout mSearchFilter;
+    private TabLayout mTabLayout;
+    private TextView mSearchFilterText;
+    private TodoStore mTodoStore;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             mTodoStore.filterBy(query);
-            resetSearchView();
+            invalidateOptionsMenu();
         }
     }
 
@@ -116,15 +113,8 @@ public class MainActivity extends AppCompatActivity
         } else {
             Utils.setMargins(mViewPager, 0, 0, 0, 0);
             mSearchFilter.setVisibility(View.GONE);
-            resetSearchView();
+            invalidateOptionsMenu();
         }
-    }
-
-    private void resetSearchView() {
-        mSearchView.clearFocus();
-        mSearchView.setQuery("", false);
-        mSearchView.setIconified(true);
-        invalidateOptionsMenu();
     }
 
     private void setTabAlpha(int position) {
@@ -157,9 +147,9 @@ public class MainActivity extends AppCompatActivity
     private void setupViewPager(final ViewPager viewPager) {
         final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         final Resources res = getResources();
-        for (int i = 0; i < mTabOptions.length; i++) {
-            adapter.addFragment(TodoListFragment.newInstance(mTabOptions[i][2]),
-                    res.getString(mTabOptions[i][1]));
+        for (int[] options : mTabOptions) {
+            adapter.addFragment(TodoListFragment.newInstance(options[2]),
+                    res.getString(options[1]));
         }
         viewPager.setAdapter(adapter);
     }
@@ -230,8 +220,8 @@ public class MainActivity extends AppCompatActivity
         // Associate searchable configuration with the SearchView
         final SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        mSearchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         return true;
     }

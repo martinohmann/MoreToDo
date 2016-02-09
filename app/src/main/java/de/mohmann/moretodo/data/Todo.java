@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 /**
  * Created by mohmann on 2/3/16.
@@ -146,7 +145,6 @@ public class Todo implements Comparable<Todo>, Parcelable {
 
     public void setDone(boolean done, boolean setFinishTime) {
         if (done && setFinishTime) {
-            Log.d(TAG, "finishDate " + toString());
             finishDate = System.currentTimeMillis();
         }
         this.done = done;

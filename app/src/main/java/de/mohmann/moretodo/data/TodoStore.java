@@ -17,10 +17,10 @@ public class TodoStore {
 
     private static TodoStore sInstance;
 
-    private List<Todo> mTodoList = new ArrayList<>();
+    private DatabaseHelper mDbHelper;
     private List<OnTodoListUpdateListener> mListListeners = new ArrayList<>();
     private List<OnTodoListFilterListener> mFilterListeners = new ArrayList<>();
-    private DatabaseHelper mDbHelper;
+    private List<Todo> mTodoList = new ArrayList<>();
     private String mFilter = FILTER_NONE;
 
     public static synchronized TodoStore getInstance(Context context) {
@@ -73,22 +73,21 @@ public class TodoStore {
         }
     }
 
-    public void filterBy(String filterString) {
+    public void filterBy(String filterString, boolean enabled) {
         mFilter = filterString;
         for (OnTodoListFilterListener listener : mFilterListeners) {
             if (listener != null)
-                listener.onTodoListFilter(filterString, true);
+                listener.onTodoListFilter(mFilter, enabled);
         }
         load();
     }
 
+    public void filterBy(String filterString) {
+        filterBy(filterString, true);
+    }
+
     public void clearFilter() {
-        mFilter = FILTER_NONE;
-        for (OnTodoListFilterListener listener : mFilterListeners) {
-            if (listener != null)
-                listener.onTodoListFilter(FILTER_NONE, false);
-        }
-        load();
+        filterBy(FILTER_NONE, false);
     }
 
     public Todo getById(final long id) {

@@ -28,13 +28,11 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
     final public static String TAG = "EditActivity";
 
+    private Calendar mCalendar;
     private EditText mInputTitle;
     private EditText mInputContent;
     private EditText mInputDueDate;
-
     private Todo mTodo;
-
-    private Calendar mCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

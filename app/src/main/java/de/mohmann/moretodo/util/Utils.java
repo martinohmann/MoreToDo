@@ -1,7 +1,6 @@
 package de.mohmann.moretodo.util;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -16,8 +15,7 @@ public class Utils {
     }
 
     public static void toast(final Context context, int id) {
-        Resources res = context.getResources();
-        String message = res.getString(id);
+        String message = context.getResources().getString(id);
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 

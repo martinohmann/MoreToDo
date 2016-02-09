@@ -37,9 +37,9 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
     final public static int LIST_PENDING = 0x3;
 
     private Filter mFilter;
+    private int mListType;
     private List<Todo> mOriginalTodoList;
     private List<Todo> mFilteredTodoList = new ArrayList<>();
-    private int mListType;
 
     private Comparator<Todo> mComparator = new Comparator<Todo>() {
         @Override

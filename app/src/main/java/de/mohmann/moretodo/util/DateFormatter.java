@@ -39,41 +39,30 @@ public class DateFormatter {
     public static String humanReadable(final Date date) {
         long diff = (System.currentTimeMillis() - date.getTime()) / 1000;
 
+        String format = "%d %s%s ago";
         String humanDate;
         long adjusted;
 
-        if (diff > 0) {
-            if (diff < 60) {
-                humanDate = "just now";
-            } else if (diff < 3600) {
-                adjusted = diff / 60;
-                humanDate = String.format("%d minute%s ago", adjusted, pluralSuffix(adjusted));
-            } else if (diff < 86400) {
-                adjusted = diff / 3600;
-                humanDate = String.format("%d hour%s ago", adjusted, pluralSuffix(adjusted));
-            } else if (diff < 604800) {
-                adjusted = diff / 86400;
-                humanDate = String.format("%d day%s ago", adjusted, pluralSuffix(adjusted));
-            } else {
-                humanDate = getShortDate(date);
-            }
-        } else {
+        if (diff < 0) {
             diff = -diff;
-             if (diff > 604800) {
-                 humanDate = getShortDate(date);
-            } else if (diff > 86400) {
-                 adjusted = diff / 86400;
-                 humanDate = String.format("in %d day%s", adjusted, pluralSuffix(adjusted));
-            } else if (diff > 3600) {
-                 adjusted = diff / 3600;
-                 humanDate = String.format("in %d hour%s", adjusted, pluralSuffix(adjusted));
-            } else if (diff > 60) {
-                 adjusted = diff / 60;
-                 humanDate = String.format("in %d minute%s", adjusted, pluralSuffix(adjusted));
-            } else {
-                 humanDate = "just now";
-            }
+            format = "in %d %s%s";
         }
+
+        if (diff > 604800) {
+             humanDate = getShortDate(date);
+        } else if (diff > 86400) {
+             adjusted = diff / 86400;
+             humanDate = String.format(format, adjusted, "day", pluralSuffix(adjusted));
+        } else if (diff > 3600) {
+             adjusted = diff / 3600;
+             humanDate = String.format(format, adjusted, "hour", pluralSuffix(adjusted));
+        } else if (diff > 60) {
+             adjusted = diff / 60;
+             humanDate = String.format(format, adjusted, "minute", pluralSuffix(adjusted));
+        } else {
+             humanDate = "just now";
+        }
+
         return humanDate;
     }
 

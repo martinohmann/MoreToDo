@@ -28,13 +28,13 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
         SwipeRefreshLayout.OnRefreshListener, TodoStore.OnTodoListUpdateListener {
 
     final public static String TAG = "TodoListFragment";
+
     final public static String EXTRA_LIST_TYPE =
             "de.mohmann.moretodo.fragments.TodoListFragment.EXTRA_LIST_TYPE";
 
+    private SwipeRefreshLayout mSwipeLayout;
     private TodoListAdapter mTodoListAdapter;
     private TodoStore mTodoStore;
-
-    private SwipeRefreshLayout mSwipeLayout;
 
     public static TodoListFragment newInstance(int listType) {
         TodoListFragment f = new TodoListFragment();
@@ -98,7 +98,6 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void onTodoListUpdate() {
-        Log.d(TAG, "onTodoListUpdate");
         updateViews();
     }
 
@@ -134,9 +133,8 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
                     break;
                 case 1: /* delete */
                     Log.d(TAG, "deleting todo: " + todo.toString());
-                    Utils.toast(getActivity(), R.string.message_todo_deleted);
-
                     mTodoStore.removeById(todo.getId());
+                    Utils.toast(getActivity(), R.string.message_todo_deleted);
                     break;
             }
         }

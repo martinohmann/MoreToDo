@@ -11,14 +11,16 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.mohmann.moretodo.util.Constants;
-
 /**
  * Created by mohmann on 2/8/16.
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     final private static String TAG = "DatabaseHelper";
+
+    /* increment on schema change */
+    final private static int DATABASE_VERSION = 1;
+    final private static String DATABASE_NAME = "todos.db";
 
     final private static String TEXT_TYPE = " TEXT";
     final private static String INTEGER_TYPE = " INTEGER";
@@ -48,7 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private DatabaseHelper(Context context) {
-        super(context, Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public void onCreate(SQLiteDatabase db) {
@@ -113,9 +115,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + Todo.TABLE_NAME + "WHERE id = ?",
                 new String[] { Long.toString(id) } );
-        cursor.moveToFirst();
 
-        return createTodoFromCursor(cursor);
+        if (cursor.moveToFirst())
+            return createTodoFromCursor(cursor);
+        return null;
     }
 
     public List<Todo> getTodos() {

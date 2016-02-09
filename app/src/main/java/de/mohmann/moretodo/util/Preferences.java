@@ -17,7 +17,7 @@ public class Preferences {
 
     /* general prefs getters and setters */
     public static void setAutoremoveDoneTodos(Context context, int value) {
-        setIntegerPrefrence(context, PREF_AUTOREMOVE_DONE_TODOS, value);
+        setIntegerPreference(context, PREF_AUTOREMOVE_DONE_TODOS, value);
     }
 
     public static int getAutoremoveDoneTodos(Context context) {
@@ -62,7 +62,7 @@ public class Preferences {
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(key, defaultValue);
     }
 
-    private static void setIntegerPrefrence(Context context, String key, int value) {
+    private static void setIntegerPreference(Context context, String key, int value) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(key, value).apply();
     }
 

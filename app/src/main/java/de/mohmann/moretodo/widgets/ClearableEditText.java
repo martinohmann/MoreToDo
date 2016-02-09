@@ -78,7 +78,7 @@ public class ClearableEditText extends AppCompatEditText implements TextWatcher,
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     setText("");
                     if (mClearTextListener != null) {
-                        mClearTextListener.onClearText();
+                        mClearTextListener.onClearText(this);
                     }
                 }
                 return true;
@@ -112,7 +112,7 @@ public class ClearableEditText extends AppCompatEditText implements TextWatcher,
     }
 
     public interface OnClearTextListener {
-        void onClearText();
+        void onClearText(ClearableEditText view);
     }
 
 }

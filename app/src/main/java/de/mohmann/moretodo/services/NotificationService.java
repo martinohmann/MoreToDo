@@ -35,8 +35,7 @@ public class NotificationService extends Service {
     final public static String ACTION_TODO_MARKED_DONE =
             "de.mohmann.moretodo.services.NotificationService.ACTION_TODO_MARKED_DONE";
 
-    private static int mNotificationId = 0;
-
+    private static int sNotificationId = 0;
     private static PendingIntent sPendingIntent = null;
 
     private Context mContext;
@@ -115,12 +114,12 @@ public class NotificationService extends Service {
 
         /* gets a PendingIntent containing the entire back stack */
         PendingIntent pendingContentIntent =
-                stackBuilder.getPendingIntent(mNotificationId, PendingIntent.FLAG_UPDATE_CURRENT);
+                stackBuilder.getPendingIntent(sNotificationId, PendingIntent.FLAG_UPDATE_CURRENT);
 
         /* add intent to notification */
         builder.setContentIntent(pendingContentIntent);
 
-        /* create intent to mark todo as done */
+        /* create intent to mark as done */
         Intent markIntent = new Intent(ACTION_TODO_MARKED_DONE);
         markIntent.putExtra(Todo.EXTRA_TODO, todo);
 
@@ -132,7 +131,7 @@ public class NotificationService extends Service {
                 pendingMarkIntent);
 
         /* deploy */
-        mNotificationManager.notify(mNotificationId++, builder.build());
+        mNotificationManager.notify(sNotificationId++, builder.build());
     }
 
 

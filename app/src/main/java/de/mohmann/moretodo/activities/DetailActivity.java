@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +29,7 @@ public class DetailActivity extends AppCompatActivity
 
     final public static String TAG = "DetailActivity";
 
+    private AlertDialog mDeleteDialog;
     private TextView mTitleView;
     private CardView mContainerContent;
     private TextView mContentView;
@@ -38,9 +38,6 @@ public class DetailActivity extends AppCompatActivity
     private TextView mFinishedView;
     private CardView mContainerDueDate;
     private TextView mDueDateView;
-
-    private AlertDialog mDeleteDialog;
-
     private Todo mTodo;
     private TodoStore mTodoStore;
 
@@ -75,7 +72,7 @@ public class DetailActivity extends AppCompatActivity
         }
         
         populateViews();
-        buildDialogs();
+        buildDeleteDialog();
     }
     
     private void populateViews() {
@@ -128,7 +125,7 @@ public class DetailActivity extends AppCompatActivity
         });
     }
 
-    private void buildDialogs() {
+    private void buildDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.question_delete_item_long)
                 .setTitle(R.string.alert_delete_item)
@@ -197,7 +194,6 @@ public class DetailActivity extends AppCompatActivity
         super.onResume();
 
         if (mTodo != null) {
-            /* update todo item */
             mTodo = mTodoStore.getById(mTodo.getId());
             populateViews();
         }

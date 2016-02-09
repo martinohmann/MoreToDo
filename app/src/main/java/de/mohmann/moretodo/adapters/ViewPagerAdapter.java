@@ -16,8 +16,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     final public static String TAG = "ViewPagerAdapter";
 
-    final private List<TodoListFragment> mFragmentList = new ArrayList<>();
     final private List<String> mFragmentTitleList = new ArrayList<>();
+    final private List<TodoListFragment> mFragmentList = new ArrayList<>();
 
     public ViewPagerAdapter(FragmentManager manager) {
         super(manager);
