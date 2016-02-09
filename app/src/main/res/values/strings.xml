@@ -12,11 +12,11 @@
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
 
-    <string name="alert_delete_item">Delete item</string>
-    <string name="question_delete_item_long">Do you really want to delete this item?</string>
+    <string name="alert_delete_item">Delete todo</string>
+    <string name="question_delete_item_long">Do you really want to delete this todo?</string>
 
-    <string name="alert_delete_items">Delete items</string>
-    <string name="question_delete_items_long">Do you really want to delete all done items?</string>
+    <string name="alert_delete_items">Delete todos</string>
+    <string name="question_delete_items_long">Do you really want to delete all done todos?</string>
 
     <string name="action_settings">Settings</string>
     <string name="action_save">Save</string>
@@ -25,10 +25,10 @@
     <string name="property_unknown">&lt;unknown&gt;</string>
 
     <string name="title_todo_list_context_menu">Choose action</string>
-    <string name="edit_item">Edit item</string>
-    <string name="delete_item">Delete item</string>
+    <string name="edit_item">Edit todo</string>
+    <string name="delete_item">Delete todo</string>
     <string name="mark_item_done">Mark as done</string>
-    <string name="clear_done">Clear done items</string>
+    <string name="clear_done">Clear done todos</string>
     <string name="view">View</string>
 
     <string name="label_title">Title</string>
@@ -63,26 +63,31 @@
     <string name="title_activity_settings">Settings</string>
 
     <string name="title_about_dialog">About</string>
-    <string name="about_description">Simple todo app using the material design.</string>
-    <string name="about_credits">\u00A9 2016 Martin Ohmann\nhttps://mohmann.de/\n\nGithub: https://github.com/martinohmann/MoreToDo</string>
+    <string name="about_description">Simple todo app using Material Design.</string>
+    <string name="about_credits">\u00A9 2016 Martin Ohmann\nhttps://mohmann.de\n\nThis application is licensed under the GNU GPL and can be found on Github:\nhttps://github.com/martinohmann/MoreToDo</string>
 
     <!-- Strings related to Settings -->
 
     <!-- General settings -->
     <string name="pref_header_general">General</string>
 
-    <string name="pref_title_autoremove_done_todos">Autoremove done todos</string>
+    <string name="pref_title_autoremove_enable">Autoremove done todos</string>
+    <string name="pref_description_autoremove_enable">Done todos will get deleted after the specified amount of time</string>
+
+    <string name="pref_title_autoremove_done_todos">Remove done todos after</string>
     <string-array name="pref_autoremove_list_titles">
-        <item>Todos older than one month</item>
-        <item>Todos older than one week</item>
-        <item>Todos older than one day</item>
-        <item>Never</item>
+        <item>One month</item>
+        <item>One week</item>
+        <item>One day</item>
+        <item>One hour</item>
+        <item>One minute</item>
     </string-array>
     <string-array name="pref_autoremove_list_values">
-        <item>2</item>
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
+        <item>2592000</item>
+        <item>604800</item>
+        <item>86400</item>
+        <item>3600</item>
+        <item>60</item>
     </string-array>
 
     <string name="pref_title_markdown_enable">Enable Markdown</string>

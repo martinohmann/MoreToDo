@@ -133,7 +133,7 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
                     break;
                 case 1: /* delete */
                     Log.d(TAG, "deleting todo: " + todo.toString());
-                    mTodoStore.removeById(todo.getId());
+                    mTodoStore.remove(todo);
                     Utils.toast(getActivity(), R.string.message_todo_deleted);
                     break;
             }

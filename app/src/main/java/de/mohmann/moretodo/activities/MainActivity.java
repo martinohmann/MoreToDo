@@ -26,7 +26,7 @@ import de.mohmann.moretodo.adapters.TodoListAdapter;
 import de.mohmann.moretodo.adapters.ViewPagerAdapter;
 import de.mohmann.moretodo.data.TodoStore;
 import de.mohmann.moretodo.fragments.TodoListFragment;
-import de.mohmann.moretodo.services.NotificationService;
+import de.mohmann.moretodo.services.BackgroundService;
 import de.mohmann.moretodo.util.Utils;
 
 public class MainActivity extends AppCompatActivity
@@ -84,8 +84,8 @@ public class MainActivity extends AppCompatActivity
         buildAboutDialog();
         buildDeleteDialog();
 
-        /* start notification service */
-        startService(new Intent(this, NotificationService.class));
+        /* start background service */
+        startService(new Intent(this, BackgroundService.class));
 
         /* handle search intent */
         handleIntent(getIntent());

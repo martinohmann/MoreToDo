@@ -12,7 +12,11 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.activities.DetailActivity;
@@ -25,15 +29,15 @@ import de.mohmann.moretodo.util.Utils;
 /**
  * Created by mohmann on 2/8/16.
  */
-public class NotificationService extends Service {
+public class BackgroundService extends Service {
 
-    final public static String TAG = "NotificationService";
+    final public static String TAG = "BackgroundService";
 
     final public static String EXTRA_NOTIFICATION_ID =
-            "de.mohmann.moretodo.services.NotificationService.NOTIFICATION_ID";
+            "de.mohmann.moretodo.services.BackgroundService.NOTIFICATION_ID";
 
     final public static String ACTION_TODO_MARKED_DONE =
-            "de.mohmann.moretodo.services.NotificationService.ACTION_TODO_MARKED_DONE";
+            "de.mohmann.moretodo.services.BackgroundService.ACTION_TODO_MARKED_DONE";
 
     private static int sNotificationId = 0;
     private static PendingIntent sPendingIntent = null;
@@ -49,16 +53,14 @@ public class NotificationService extends Service {
         mTodoStore = TodoStore.getInstance(this);
 
         if (sPendingIntent == null) {
-            sPendingIntent = PendingIntent.getService(this, 0, new Intent(this, NotificationService.class), 0);
+            sPendingIntent = PendingIntent.getService(this, 0, new Intent(this, BackgroundService.class), 0);
         }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (Preferences.isNotificationsEnabled(mContext)) {
-            Log.d(TAG, String.format("[%s] %s",
-                    DateFormatter.getFullDate(System.currentTimeMillis()),
-                    "background task"));
+            Log.d(TAG, String.format("[%s] %s", new Date(), "notification background task"));
 
             for (Todo todo : mTodoStore.getList()) {
                 if (todo.isDone() || todo.getDueDate() == Todo.DATE_UNSET || todo.isNotified()) {
@@ -70,10 +72,29 @@ public class NotificationService extends Service {
                     mTodoStore.save(todo);
                 }
             }
-            // I don't want this service to stay in memory, so I stop it
-            // immediately after doing what I wanted it to do.
-            stopSelf();
         }
+
+        if (Preferences.isAutoremoveEnabled(mContext)) {
+            Log.d(TAG, String.format("[%s] %s", new Date(), "autoremoval background task"));
+
+            int interval = Preferences.getAutoremoveInterval(mContext) * 1000;
+
+            /* iterate over a copy of the list to avoid concurrent modification */
+            List<Todo> todoList = new ArrayList<>(mTodoStore.getList());
+
+            for (Todo todo : todoList) {
+                if (!todo.isDone())
+                    continue;
+
+                if (System.currentTimeMillis() - todo.getFinishDate() >= interval)
+                    mTodoStore.remove(todo);
+            }
+        }
+
+        // I don't want this service to stay in memory, so I stop it
+        // immediately after doing what I wanted it to do.
+        stopSelf();
+
         return START_NOT_STICKY;
     }
 

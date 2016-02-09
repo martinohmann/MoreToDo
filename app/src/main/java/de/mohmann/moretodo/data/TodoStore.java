@@ -45,7 +45,14 @@ public class TodoStore {
         notifyDataSetChanged();
     }
 
-    public void removeById(final long id) {
+    public void remove(final Todo t) {
+        if (t == null || t.getId() == Todo.ID_UNSET)
+            return;
+
+        removeById(t.getId());
+    }
+
+    private void removeById(final long id) {
         for (Iterator<Todo> iterator = mTodoList.iterator(); iterator.hasNext();) {
             Todo todo = iterator.next();
             if (todo.getId() == id) {

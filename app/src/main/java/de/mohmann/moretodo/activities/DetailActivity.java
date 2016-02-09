@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +19,7 @@ import android.widget.TextView;
 import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.data.Todo;
 import de.mohmann.moretodo.data.TodoStore;
-import de.mohmann.moretodo.services.NotificationService;
+import de.mohmann.moretodo.services.BackgroundService;
 import de.mohmann.moretodo.util.DateFormatter;
 import de.mohmann.moretodo.util.Preferences;
 import de.mohmann.moretodo.util.Utils;
@@ -64,7 +63,7 @@ public class DetailActivity extends AppCompatActivity
 
         mTodo = intent.getParcelableExtra(Todo.EXTRA_TODO);
 
-        final int notificationId = intent.getIntExtra(NotificationService.EXTRA_NOTIFICATION_ID, -1);
+        final int notificationId = intent.getIntExtra(BackgroundService.EXTRA_NOTIFICATION_ID, -1);
 
         if (notificationId > -1) {
             final NotificationManager notificationManager =
@@ -146,7 +145,7 @@ public class DetailActivity extends AppCompatActivity
             return;
 
         if (id == DialogInterface.BUTTON_POSITIVE) {
-            mTodoStore.removeById(mTodo.getId());
+            mTodoStore.remove(mTodo);
 
             Utils.toast(this, R.string.message_todo_deleted);
             finish();

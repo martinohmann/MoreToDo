@@ -9,7 +9,8 @@ import android.preference.PreferenceManager;
 public class Preferences {
 
     /* general prefs */
-    final public static String PREF_AUTOREMOVE_DONE_TODOS = "autoremove_done_todos";
+    final public static String PREF_AUTOREMOVE_ENABLE = "autoremove_enable";
+    final public static String PREF_AUTOREMOVE_INTERVAL = "autoremove_interval";
     final public static String PREF_MARKDOWN_ENABLE = "markdown_enable";
 
     /* notification prefs */
@@ -17,12 +18,20 @@ public class Preferences {
     final public static String PREF_NOTIFICATIONS_VIBRATE = "notifications_vibrate";
 
     /* general prefs getters and setters */
-    public static void setAutoremoveDoneTodos(Context context, int value) {
-        setIntegerPreference(context, PREF_AUTOREMOVE_DONE_TODOS, value);
+    public static void setAutoremoveEnabled(Context context, boolean value) {
+        setBooleanPreference(context, PREF_AUTOREMOVE_ENABLE, value);
     }
 
-    public static int getAutoremoveDoneTodos(Context context) {
-        return getIntegerPreference(context, PREF_AUTOREMOVE_DONE_TODOS, -1);
+    public static boolean isAutoremoveEnabled(Context context) {
+        return getBooleanPreference(context, PREF_AUTOREMOVE_ENABLE, false);
+    }
+
+    public static void setAutoremoveInterval(Context context, int value) {
+        setStringPreference(context, PREF_AUTOREMOVE_INTERVAL, Integer.toString(value));
+    }
+
+    public static int getAutoremoveInterval(Context context) {
+        return Integer.parseInt(getStringPreference(context, PREF_AUTOREMOVE_INTERVAL, "3600"));
     }
 
     public static void setMarkdownEnabled(Context context, boolean value) {

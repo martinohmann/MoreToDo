@@ -12,6 +12,6 @@ public class AutoStart extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // start notification service on boot
-        context.startService(new Intent(context, NotificationService.class));
+        context.startService(new Intent(context, BackgroundService.class));
     }
 }

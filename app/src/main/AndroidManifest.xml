@@ -22,11 +22,11 @@
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="de.mohmann.moretodo.services.NotificationService.ACTION_TODO_MARKED_DONE" />
+                <action android:name="de.mohmann.moretodo.services.BackgroundService.ACTION_TODO_MARKED_DONE" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".services.NotificationService" />
+        <service android:name=".services.BackgroundService" />
 
         <activity
             android:name=".activities.MainActivity"
