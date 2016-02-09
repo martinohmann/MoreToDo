@@ -10,12 +10,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import de.mohmann.moretodo.R;
@@ -47,7 +47,8 @@ public class BackgroundService extends Service {
 
     @Override
     public void onCreate() {
-        mContext = getApplicationContext();
+        /* wrap context with application theme for toast messages */
+        mContext = new ContextThemeWrapper(getApplicationContext(), R.style.AppTheme);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mTodoStore = TodoStore.getInstance(this);
 
@@ -60,8 +61,6 @@ public class BackgroundService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (Preferences.isNotificationsEnabled(mContext)) {
             Log.d(TAG, String.format("[%s] %s", new Date(), "notification background task"));
-
-            Log.d(TAG, mTodoStore.getList().toString());
 
             for (Todo todo : mTodoStore.getList()) {
                 if (todo.isDone() || todo.getDueDate() == Todo.DATE_UNSET || todo.isNotified()) {
@@ -78,7 +77,8 @@ public class BackgroundService extends Service {
         if (Preferences.isAutoremoveEnabled(mContext)) {
             Log.d(TAG, String.format("[%s] %s", new Date(), "autoremoval background task"));
 
-            int interval = Preferences.getAutoremoveInterval(mContext) * 1000;
+            final long interval = Preferences.getAutoremoveInterval(mContext) * 1000;
+            int removed = 0;
 
             /* iterate over a copy of the list to avoid concurrent modification */
             List<Todo> todoList = new ArrayList<>(mTodoStore.getList());
@@ -87,8 +87,18 @@ public class BackgroundService extends Service {
                 if (!todo.isDone())
                     continue;
 
-                if (System.currentTimeMillis() - todo.getFinishDate() >= interval)
+                if (System.currentTimeMillis() - todo.getFinishDate() >= interval) {
                     mTodoStore.remove(todo);
+                    removed++;
+                }
+            }
+
+            if (removed > 0) {
+                if (removed == 1) {
+                    Utils.toast(mContext, R.string.message_todo_autoremoval, removed);
+                } else {
+                    Utils.toast(mContext, R.string.message_todo_autoremoval_plural, removed);
+                }
             }
         }
 
@@ -115,7 +125,7 @@ public class BackgroundService extends Service {
         }
 
         if (!todo.getContent().isEmpty()) {
-            builder.setContentText(Utils.shorten(todo.getContent(), 140, true));
+            builder.setContentText(Utils.shorten(todo.getContent(), 140));
         }
 
         builder.setSubText(date);

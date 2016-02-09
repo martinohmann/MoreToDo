@@ -23,8 +23,17 @@ public class Utils {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
+    public static void toast(final Context context, String format, Object...params) {
+        toast(context, String.format(format, params));
+    }
+
+    public static void toast(final Context context, int id, Object...params) {
+        String format = context.getResources().getString(id);
+        toast(context, format, params);
+    }
+
     public static String shorten(String string, int len) {
-        return shorten(string, len, false);
+        return shorten(string, len, true);
     }
 
     public static String shorten(final String string, int len, boolean ellipsis) {

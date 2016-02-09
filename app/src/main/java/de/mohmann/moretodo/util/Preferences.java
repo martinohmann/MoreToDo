@@ -26,12 +26,12 @@ public class Preferences {
         return getBooleanPreference(context, PREF_AUTOREMOVE_ENABLE, false);
     }
 
-    public static void setAutoremoveInterval(Context context, int value) {
-        setStringPreference(context, PREF_AUTOREMOVE_INTERVAL, Integer.toString(value));
+    public static void setAutoremoveInterval(Context context, long value) {
+        setStringPreference(context, PREF_AUTOREMOVE_INTERVAL, Long.toString(value));
     }
 
-    public static int getAutoremoveInterval(Context context) {
-        return Integer.parseInt(getStringPreference(context, PREF_AUTOREMOVE_INTERVAL, "3600"));
+    public static long getAutoremoveInterval(Context context) {
+        return Long.parseLong(getStringPreference(context, PREF_AUTOREMOVE_INTERVAL, "3600"));
     }
 
     public static void setMarkdownEnabled(Context context, boolean value) {

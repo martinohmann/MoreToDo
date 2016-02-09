@@ -51,6 +51,8 @@
     <string name="message_todo_enter_duedate">Pick a due date</string>
     <string name="message_todo_done">Marked as done</string>
     <string name="message_todo_pending">Marked as pending</string>
+    <string name="message_todo_autoremoval">Autoremoved %d todo</string>
+    <string name="message_todo_autoremoval_plural">Autoremoved %d todos</string>
 
     <string name="label_tab_all">All</string>
     <string name="label_tab_pending">Pending</string>
