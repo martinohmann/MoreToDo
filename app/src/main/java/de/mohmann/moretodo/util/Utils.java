@@ -42,10 +42,7 @@ public class Utils {
 
         if (string.length() > len && len > 0) {
             if (ellipsis) {
-                if (len > 3) {
-                    return string.substring(0, len - 3) + "...";
-                }
-                return string.substring(0, len) + "...";
+                return string.substring(0, len) + "\u2026";
             }
             return string.substring(0, len);
         }
