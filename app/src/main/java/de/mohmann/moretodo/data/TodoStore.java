@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import de.mohmann.moretodo.database.DatabaseHelper;
-
 /**
  * Created by mohmann on 2/3/16.
  */
@@ -134,7 +132,7 @@ public class TodoStore {
         mFilterListeners.add(listener);
     }
 
-    public void removeSetTodoListFilterListener(OnTodoListFilterListener listener) {
+    public void removeOnTodoListFilterListener(OnTodoListFilterListener listener) {
         mFilterListeners.remove(listener);
     }
 

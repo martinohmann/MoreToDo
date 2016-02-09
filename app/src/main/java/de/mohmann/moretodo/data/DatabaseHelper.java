@@ -1,4 +1,4 @@
-package de.mohmann.moretodo.database;
+package de.mohmann.moretodo.data;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,7 +11,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.mohmann.moretodo.data.Todo;
 import de.mohmann.moretodo.util.Constants;
 
 /**
