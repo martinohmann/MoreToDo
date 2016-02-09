@@ -13,4 +13,5 @@
     <color name="tab_text_color">#ffffff</color>
 
     <color name="search_filter_background">#e6e6e6</color>
+    <color name="detail_background">#eaeaea</color>
 </resources>

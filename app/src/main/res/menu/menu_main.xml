@@ -13,9 +13,14 @@
         android:orderInCategory="100"
         android:title="@string/clear_done"
         app:showAsAction="never" />
-    <!--<item
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="100"
+        android:title="@string/title_about_dialog"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />-->
+        app:showAsAction="never" />
 </menu>

@@ -2,7 +2,6 @@ package de.mohmann.moretodo.adapters;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,24 +30,25 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
 
     final public static String TAG = "TodoListAdapter";
 
-    final public static String LIST_ALL = "all";
-    final public static String LIST_DONE = "done";
-    final public static String LIST_PENDING = "pending";
+    final public static String FILTER_NONE = "";
+
+    final public static int LIST_ALL = 0x1;
+    final public static int LIST_DONE = 0x2;
+    final public static int LIST_PENDING = 0x3;
 
     private Filter mFilter;
     private List<Todo> mOriginalTodoList;
     private List<Todo> mFilteredTodoList = new ArrayList<>();
-    private String mListType;
-    private String mFilterString;
+    private int mListType;
 
     private Comparator<Todo> mComparator = new Comparator<Todo>() {
         @Override
         public int compare(Todo t1, Todo t2) {
             if (t1 == null || t2 == null)
                 return -1;
-            if (mListType.equals(LIST_ALL))
+            if (mListType == LIST_ALL)
                 return t1.getCreationDate() > t2.getCreationDate() ? -1 : 1;
-            if (mListType.equals(LIST_PENDING)) {
+            if (mListType == LIST_PENDING) {
                 if (t1.getDueDate() == Todo.DATE_UNSET && t2.getDueDate() == Todo.DATE_UNSET) {
                     return t1.getCreationDate() > t2.getCreationDate() ? 1 : -1;
                 }
@@ -60,18 +60,18 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
                 }
                 return t1.getDueDate() > t2.getDueDate() ? 1 : -1;
             }
-            if (mListType.equals(LIST_DONE))
+            if (mListType == LIST_DONE)
                 return t1.getFinishDate() > t2.getFinishDate() ? -1 : 1;
             return -1;
         }
     };
 
-    public TodoListAdapter(Context context, int resource, List<Todo> items, String listType) {
+    public TodoListAdapter(Context context, int resource, List<Todo> items, int listType) {
         super(context, resource, items);
         mOriginalTodoList = items;
         mFilteredTodoList.addAll(items);
         mListType = listType;
-        mFilterString = TodoStore.FILTER_DEFAULT;
+        Collections.sort(mFilteredTodoList, getComparator());
     }
 
     public Comparator<Todo> getComparator() {
@@ -98,7 +98,7 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, final View convertView, ViewGroup parent) {
         View v = convertView;
         ViewHolder holder;
 
@@ -128,7 +128,7 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
        final int paintFlags = holder.titleView.getPaintFlags();
 
         if (todo.isDone()) {
-            if (!mListType.equals(LIST_DONE)) {
+            if (mListType != LIST_DONE) {
                 v.setAlpha(0.3f);
                 holder.titleView.setPaintFlags(paintFlags | Paint.STRIKE_THRU_TEXT_FLAG);
             }
@@ -183,12 +183,8 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
         applyFilter();
     }
 
-    public void setFilterString(String filterString) {
-        mFilterString = filterString;
-    }
-
     public void applyFilter() {
-        getFilter().filter(mFilterString);
+        getFilter().filter(FILTER_NONE);
     }
 
     @Override
@@ -197,7 +193,6 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
             mFilter = new TodoFilter();
         return mFilter;
     }
-
 
     private class ViewHolder {
         TextView titleView;
@@ -212,7 +207,6 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
     private class TodoFilter extends Filter {
 
         private List<Todo> getDoneItems(boolean done) {
-            FilterResults result = new FilterResults();
             List<Todo> items = new ArrayList<>();
 
             for (Todo todo : mOriginalTodoList) {
@@ -228,9 +222,9 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
             FilterResults result = new FilterResults();
             List<Todo> items;
 
-            if (mListType.equals(LIST_DONE)) {
+            if (mListType == LIST_DONE) {
                 items = getDoneItems(true);
-            } else if (mListType.equals(LIST_PENDING)) {
+            } else if (mListType == LIST_PENDING) {
                 items = getDoneItems(false);
             } else {
                 synchronized(this) {
@@ -248,7 +242,7 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
         protected void publishResults(CharSequence constraint, FilterResults results) {
             mFilteredTodoList = (ArrayList<Todo>) results.values;
 
-            if(mFilteredTodoList != null && mFilteredTodoList.size() > 0) {
+            if (mFilteredTodoList != null && mFilteredTodoList.size() > 0) {
                 Collections.sort(mFilteredTodoList, getComparator());
                 notifyDataSetChanged();
             } else {

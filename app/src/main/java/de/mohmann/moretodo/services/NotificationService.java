@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.app.TaskStackBuilder;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
@@ -20,6 +19,7 @@ import de.mohmann.moretodo.activities.DetailActivity;
 import de.mohmann.moretodo.data.Todo;
 import de.mohmann.moretodo.data.TodoStore;
 import de.mohmann.moretodo.util.DateFormatter;
+import de.mohmann.moretodo.util.Preferences;
 import de.mohmann.moretodo.util.Utils;
 
 /**
@@ -56,24 +56,25 @@ public class NotificationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, String.format("[%s] %s",
-                DateFormatter.getFullDate(System.currentTimeMillis()),
-                "background task"));
+        if (Preferences.isNotificationsEnabled(mContext)) {
+            Log.d(TAG, String.format("[%s] %s",
+                    DateFormatter.getFullDate(System.currentTimeMillis()),
+                    "background task"));
 
-        for (Todo todo : mTodoStore.getList()) {
-            if (!todo.isDone() && todo.getDueDate() != Todo.DATE_UNSET && !todo.isNotified()) {
+            for (Todo todo : mTodoStore.getList()) {
+                if (todo.isDone() || todo.getDueDate() == Todo.DATE_UNSET || todo.isNotified()) {
+                    continue;
+                }
                 if (todo.getDueDate() <= System.currentTimeMillis()) {
                     notify(todo);
                     todo.setNotified(true);
                     mTodoStore.save(todo);
                 }
             }
+            // I don't want this service to stay in memory, so I stop it
+            // immediately after doing what I wanted it to do.
+            stopSelf();
         }
-
-        // I don't want this service to stay in memory, so I stop it
-        // immediately after doing what I wanted it to do.
-        stopSelf();
-
         return START_NOT_STICKY;
     }
 
@@ -81,7 +82,7 @@ public class NotificationService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
 
         String date = DateFormatter.getFullDate(todo.getDueDate());
-        builder.setDefaults(Notification.DEFAULT_ALL);
+        builder.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND);
         builder.setContentTitle(todo.getTitle());
 
         if (!todo.getContent().isEmpty()) {
@@ -96,8 +97,12 @@ public class NotificationService extends Service {
         builder.setAutoCancel(true);
         builder.setOngoing(false);
 
-        /* set vibration parameters */
-        builder.setVibrate(new long[] { 0, 500, 50, 2000 });
+        if (Preferences.isVibrateEnabled(mContext)) {
+            /* set vibration parameters */
+            builder.setVibrate(new long[] { 0l, 500l });
+        } else {
+            builder.setVibrate(null);
+        }
 
         /* create new intent for notification with device and notification id as payload */
         Intent resultIntent = new Intent(mContext, DetailActivity.class);

@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity
     final public static String TAG = "MainActivity";
 
     private TodoStore mTodoStore;
+    private AlertDialog mAboutDialog;
     private AlertDialog mDeleteDialog;
 
     private TabLayout mTabLayout;
@@ -48,22 +49,11 @@ public class MainActivity extends AppCompatActivity
 
     private SearchView mSearchView;
 
-    final private int[] mTabIcons = {
-            R.drawable.ic_list_white_18dp,
-            R.drawable.ic_schedule_white_18dp,
-            R.drawable.ic_done_white_18dp
-    };
-
-    final private int[] mTabLabels = {
-            R.string.label_tab_all,
-            R.string.label_tab_pending,
-            R.string.label_tab_done
-    };
-
-    final private String[] mTabFilters = {
-            TodoListAdapter.LIST_ALL,
-            TodoListAdapter.LIST_PENDING,
-            TodoListAdapter.LIST_DONE
+    final private int[][] mTabOptions = {
+            /* icon, label, list type */
+            { R.drawable.ic_list_white_18dp, R.string.label_tab_all, TodoListAdapter.LIST_ALL },
+            { R.drawable.ic_schedule_white_18dp, R.string.label_tab_pending, TodoListAdapter.LIST_PENDING },
+            { R.drawable.ic_done_white_18dp, R.string.label_tab_done, TodoListAdapter.LIST_DONE }
     };
 
     @Override
@@ -95,6 +85,7 @@ public class MainActivity extends AppCompatActivity
         setupTabIcons();
         setTabAlpha(0);
 
+        buildAboutDialog();
         buildDeleteDialog();
 
         /* start notification service */
@@ -155,8 +146,8 @@ public class MainActivity extends AppCompatActivity
 
         for (int i = 0; i < mTabLayout.getTabCount(); i++) {
             tabView = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-            tabView.setText(mTabLabels[i]);
-            tabView.setCompoundDrawablesWithIntrinsicBounds(mTabIcons[i], 0, 0, 0);
+            tabView.setText(mTabOptions[i][1]);
+            tabView.setCompoundDrawablesWithIntrinsicBounds(mTabOptions[i][0], 0, 0, 0);
             tab = mTabLayout.getTabAt(i);
             if (tab != null) {
                 tab.setCustomView(tabView);
@@ -167,11 +158,20 @@ public class MainActivity extends AppCompatActivity
     private void setupViewPager(final ViewPager viewPager) {
         final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         final Resources res = getResources();
-        for (int i = 0; i < mTabLabels.length; i++) {
-            adapter.addFragment(TodoListFragment.newInstance(mTabFilters[i]),
-                    res.getString(mTabLabels[i]));
+        for (int i = 0; i < mTabOptions.length; i++) {
+            adapter.addFragment(TodoListFragment.newInstance(mTabOptions[i][2]),
+                    res.getString(mTabOptions[i][1]));
         }
         viewPager.setAdapter(adapter);
+    }
+
+    private void buildAboutDialog() {
+        View messageView = getLayoutInflater().inflate(R.layout.about, null, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.app_name);
+        builder.setPositiveButton(R.string.close, this);
+        builder.setView(messageView);
+        mAboutDialog = builder.create();
     }
 
     private void buildDeleteDialog() {
@@ -211,13 +211,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(DialogInterface dialog, int id) {
-        if (dialog != mDeleteDialog)
-            return;
-
-        if (id == DialogInterface.BUTTON_POSITIVE) {
-            mTodoStore.removeDone();
-            Utils.toast(this, R.string.message_todos_deleted);
-        } else {
+        if (dialog == mDeleteDialog) {
+            if (id == DialogInterface.BUTTON_POSITIVE) {
+                mTodoStore.removeDone();
+                Utils.toast(this, R.string.message_todos_deleted);
+            } else {
+                dialog.dismiss();
+            }
+        } else if (dialog == mAboutDialog) {
             dialog.dismiss();
         }
     }
@@ -243,13 +244,14 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        /* if (id == R.id.action_settings) {
+        if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             overridePendingTransition(0, 0);
-        } else */
-        if (id == R.id.action_clear_done) {
+        } else if (id == R.id.action_clear_done) {
             mDeleteDialog.show();
+        } else if (id == R.id.action_about) {
+            mAboutDialog.show();
         }
 
         return super.onOptionsItemSelected(item);

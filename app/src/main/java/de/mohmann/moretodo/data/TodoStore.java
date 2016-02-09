@@ -15,7 +15,7 @@ public class TodoStore {
 
     final public static String TAG = "TodoStore";
 
-    final public static String FILTER_DEFAULT = "";
+    final public static String FILTER_NONE = "";
 
     private static TodoStore sInstance;
 
@@ -23,7 +23,7 @@ public class TodoStore {
     private List<OnTodoListUpdateListener> mListListeners = new ArrayList<>();
     private List<OnTodoListFilterListener> mFilterListeners = new ArrayList<>();
     private DatabaseHelper mDbHelper;
-    private String mFilter = FILTER_DEFAULT;
+    private String mFilter = FILTER_NONE;
 
     public static synchronized TodoStore getInstance(Context context) {
         if (sInstance == null) {
@@ -85,10 +85,10 @@ public class TodoStore {
     }
 
     public void clearFilter() {
-        mFilter = FILTER_DEFAULT;
+        mFilter = FILTER_NONE;
         for (OnTodoListFilterListener listener : mFilterListeners) {
             if (listener != null)
-                listener.onTodoListFilter(FILTER_DEFAULT, false);
+                listener.onTodoListFilter(FILTER_NONE, false);
         }
         load();
     }
@@ -106,7 +106,7 @@ public class TodoStore {
     }
 
     public void load() {
-        if (mFilter.equals(FILTER_DEFAULT)) {
+        if (mFilter.equals(FILTER_NONE)) {
             mTodoList = mDbHelper.getTodos();
         } else {
             mTodoList = mDbHelper.getTodosByFilter(mFilter);

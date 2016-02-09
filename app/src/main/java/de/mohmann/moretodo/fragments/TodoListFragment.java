@@ -15,10 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import java.util.List;
 
 import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.activities.DetailActivity;
@@ -32,18 +28,18 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
         SwipeRefreshLayout.OnRefreshListener, TodoStore.OnTodoListUpdateListener {
 
     final public static String TAG = "TodoListFragment";
-    final public static String EXTRA_FILTER =
-            "de.mohmann.moretodo.fragments.TodoListFragment.EXTRA_FILTER";
+    final public static String EXTRA_LIST_TYPE =
+            "de.mohmann.moretodo.fragments.TodoListFragment.EXTRA_LIST_TYPE";
 
     private TodoListAdapter mTodoListAdapter;
     private TodoStore mTodoStore;
 
     private SwipeRefreshLayout mSwipeLayout;
 
-    public static TodoListFragment newInstance(String filter) {
+    public static TodoListFragment newInstance(int listType) {
         TodoListFragment f = new TodoListFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_FILTER, filter);
+        bundle.putInt(EXTRA_LIST_TYPE, listType);
         f.setArguments(bundle);
         return f;
     }
@@ -53,12 +49,12 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
                              Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         View view = inflater.inflate(R.layout.fragment_todo_list, container, false);
-        String filterName = bundle.getString(EXTRA_FILTER, TodoListAdapter.LIST_ALL);
+        int listType = bundle.getInt(EXTRA_LIST_TYPE, TodoListAdapter.LIST_ALL);
 
         mTodoStore = TodoStore.getInstance(getContext());
         mTodoStore.addOnTodoListUpdateListener(this);
         mTodoListAdapter = new TodoListAdapter(getActivity(), R.layout.todo_list_item,
-                mTodoStore.getList(), filterName);
+                mTodoStore.getList(), listType);
         mTodoListAdapter.applyFilter();
 
         final ListView listView = (ListView) view.findViewById(R.id.todo_list);

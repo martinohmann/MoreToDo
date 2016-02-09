@@ -8,13 +8,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 
 import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.data.Todo;
@@ -29,12 +31,12 @@ public class DetailActivity extends AppCompatActivity
     final public static String TAG = "DetailActivity";
 
     private TextView mTitleView;
-    private RelativeLayout mContainerContent;
+    private CardView mContainerContent;
     private TextView mContentView;
     private TextView mCreatedView;
     private ImageView mDoneView;
     private TextView mFinishedView;
-    private RelativeLayout mContainerDueDate;
+    private CardView mContainerDueDate;
     private TextView mDueDateView;
 
     private AlertDialog mDeleteDialog;
@@ -49,12 +51,12 @@ public class DetailActivity extends AppCompatActivity
         setupActionBar();
 
         mTitleView = (TextView) findViewById(R.id.text_title);
-        mContainerContent = (RelativeLayout) findViewById(R.id.container_content);
+        mContainerContent = (CardView) findViewById(R.id.container_content);
         mContentView = (TextView) findViewById(R.id.text_content);
         mCreatedView = (TextView) findViewById(R.id.text_created);
         mDoneView = (ImageView) findViewById(R.id.icon_done);
         mFinishedView = (TextView) findViewById(R.id.text_finished);
-        mContainerDueDate = (RelativeLayout) findViewById(R.id.container_due_date);
+        mContainerDueDate = (CardView) findViewById(R.id.container_due_date);
         mDueDateView = (TextView) findViewById(R.id.text_due_date);
 
         mTodoStore = TodoStore.getInstance(this);
