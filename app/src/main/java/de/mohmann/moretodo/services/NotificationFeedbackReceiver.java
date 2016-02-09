@@ -1,5 +1,6 @@
 package de.mohmann.moretodo.services;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,22 +16,23 @@ public class NotificationFeedbackReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Todo todo = intent.getParcelableExtra(Todo.EXTRA_TODO);
+        final long todoId = intent.getLongExtra(Todo.EXTRA_ID, Todo.ID_UNSET);
+        final int notificationId = intent.getIntExtra(BackgroundService.EXTRA_NOTIFICATION_ID, -1);
 
-        Log.d("NFR", "0 received");
+        if (notificationId > -1) {
+            final NotificationManager notificationManager =
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(notificationId);
+        }
 
-        if (todo == null)
+        if (todoId == Todo.ID_UNSET)
             return;
-
-        Log.d("NFR", "1 todo: " + todo.toString());
 
         TodoStore todoStore = TodoStore.getInstance(context);
-        todo = todoStore.getById(todo.getId());
+        Todo todo = todoStore.getById(todoId);
 
         if (todo == null)
             return;
-
-        Log.d("NFR", "2 todo: " + todo.toString());
 
         todo.setDone(true);
         todoStore.save(todo);

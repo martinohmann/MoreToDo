@@ -39,7 +39,6 @@ public class BackgroundService extends Service {
     final public static String ACTION_TODO_MARKED_DONE =
             "de.mohmann.moretodo.services.BackgroundService.ACTION_TODO_MARKED_DONE";
 
-    private static int sNotificationId = 0;
     private static PendingIntent sPendingIntent = null;
 
     private Context mContext;
@@ -61,6 +60,8 @@ public class BackgroundService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (Preferences.isNotificationsEnabled(mContext)) {
             Log.d(TAG, String.format("[%s] %s", new Date(), "notification background task"));
+
+            Log.d(TAG, mTodoStore.getList().toString());
 
             for (Todo todo : mTodoStore.getList()) {
                 if (todo.isDone() || todo.getDueDate() == Todo.DATE_UNSET || todo.isNotified()) {
@@ -98,12 +99,20 @@ public class BackgroundService extends Service {
         return START_NOT_STICKY;
     }
 
-    private void notify(Todo todo) {
+    private void notify(final Todo todo) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
 
         String date = DateFormatter.getFullDate(todo.getDueDate());
         builder.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND);
         builder.setContentTitle(todo.getTitle());
+        int notificationId = 0;
+
+        try {
+            notificationId = Utils.safeLongToInt(todo.getId());
+        } catch (IllegalArgumentException e) {
+            Log.w(TAG, "error while setting notificationId: unable to " +
+                    "convert todo id to int, using 0 as fallback");
+        }
 
         if (!todo.getContent().isEmpty()) {
             builder.setContentText(Utils.shorten(todo.getContent(), 140, true));
@@ -126,7 +135,8 @@ public class BackgroundService extends Service {
 
         /* create new intent for notification with device and notification id as payload */
         Intent resultIntent = new Intent(mContext, DetailActivity.class);
-        resultIntent.putExtra(Todo.EXTRA_TODO, todo);
+        resultIntent.putExtra(Todo.EXTRA_ID, todo.getId());
+        resultIntent.putExtra(BackgroundService.EXTRA_NOTIFICATION_ID, notificationId);
 
         /* create stackbuilder, add back stack, and add intent to the top of the stack */
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -135,16 +145,18 @@ public class BackgroundService extends Service {
 
         /* gets a PendingIntent containing the entire back stack */
         PendingIntent pendingContentIntent =
-                stackBuilder.getPendingIntent(sNotificationId, PendingIntent.FLAG_UPDATE_CURRENT);
+                stackBuilder.getPendingIntent(notificationId, PendingIntent.FLAG_UPDATE_CURRENT);
 
         /* add intent to notification */
         builder.setContentIntent(pendingContentIntent);
 
         /* create intent to mark as done */
         Intent markIntent = new Intent(ACTION_TODO_MARKED_DONE);
-        markIntent.putExtra(Todo.EXTRA_TODO, todo);
+        markIntent.putExtra(Todo.EXTRA_ID, todo.getId());
+        markIntent.putExtra(BackgroundService.EXTRA_NOTIFICATION_ID, notificationId);
 
-        PendingIntent pendingMarkIntent = PendingIntent.getBroadcast(this, 0, markIntent, 0);
+        PendingIntent pendingMarkIntent = PendingIntent.getBroadcast(this, 0, markIntent,
+                Intent.FILL_IN_DATA);
 
         builder.addAction(R.drawable.ic_assignment_white_18dp, getString(R.string.view),
                 pendingContentIntent);
@@ -152,7 +164,7 @@ public class BackgroundService extends Service {
                 pendingMarkIntent);
 
         /* deploy */
-        mNotificationManager.notify(sNotificationId++, builder.build());
+        mNotificationManager.notify(notificationId, builder.build());
     }
 
 

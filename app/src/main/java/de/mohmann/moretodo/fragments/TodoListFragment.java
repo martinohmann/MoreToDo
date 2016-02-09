@@ -83,7 +83,8 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra(Todo.EXTRA_TODO, (Todo) view.getTag(R.id.TAG_TODO));
+        final Todo todo = (Todo) view.getTag(R.id.TAG_TODO);
+        intent.putExtra(Todo.EXTRA_ID, todo.getId());
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
@@ -127,7 +128,7 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
             switch (menuItemIndex) {
                 case 0: /* edit */
                     Intent intent = new Intent(getActivity(), EditActivity.class);
-                    intent.putExtra(Todo.EXTRA_TODO, todo);
+                    intent.putExtra(Todo.EXTRA_ID, todo.getId());
                     startActivity(intent);
                     getActivity().overridePendingTransition(0, 0);
                     break;

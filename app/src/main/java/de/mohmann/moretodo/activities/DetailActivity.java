@@ -39,6 +39,7 @@ public class DetailActivity extends AppCompatActivity
     private CardView mContainerDueDate;
     private TextView mDueDateView;
     private Todo mTodo;
+    private long mTodoId;
     private TodoStore mTodoStore;
 
     @Override
@@ -61,7 +62,7 @@ public class DetailActivity extends AppCompatActivity
         /* get intent data */
         Intent intent = getIntent();
 
-        mTodo = intent.getParcelableExtra(Todo.EXTRA_TODO);
+        mTodoId = intent.getLongExtra(Todo.EXTRA_ID, Todo.ID_UNSET);
 
         final int notificationId = intent.getIntExtra(BackgroundService.EXTRA_NOTIFICATION_ID, -1);
 
@@ -76,6 +77,11 @@ public class DetailActivity extends AppCompatActivity
     }
     
     private void populateViews() {
+        if (mTodoId == Todo.ID_UNSET)
+            return;
+
+        mTodo = mTodoStore.getById(mTodoId);
+
         if (mTodo == null)
             return;
 
@@ -173,7 +179,7 @@ public class DetailActivity extends AppCompatActivity
 
         if (id == R.id.action_edit) {
             Intent intent = new Intent(this, EditActivity.class);
-            intent.putExtra(Todo.EXTRA_TODO, mTodo);
+            intent.putExtra(Todo.EXTRA_ID, mTodo.getId());
             startActivity(intent);
             overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
         } else if (id == R.id.action_delete) {
@@ -196,11 +202,7 @@ public class DetailActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-
-        if (mTodo != null) {
-            mTodo = mTodoStore.getById(mTodo.getId());
-            populateViews();
-        }
+        populateViews();
     }
 
     @Override

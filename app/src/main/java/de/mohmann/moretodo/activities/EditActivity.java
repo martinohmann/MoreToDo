@@ -33,6 +33,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     private EditText mInputContent;
     private EditText mInputDueDate;
     private Todo mTodo;
+    private TodoStore mTodoStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +51,12 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         mCalendar.set(Calendar.SECOND, 0);
         mCalendar.set(Calendar.MILLISECOND, 0);
 
+        mTodoStore = TodoStore.getInstance(this);
+
         /* get intent data */
-        mTodo = getIntent().getParcelableExtra(Todo.EXTRA_TODO);
+        final long todoId = getIntent().getLongExtra(Todo.EXTRA_ID, Todo.ID_UNSET);
+
+        mTodo = mTodoStore.getById(todoId);
 
         populateViews();
     }
@@ -69,6 +74,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         if (mTodo == null) {
             setTitle(getResources().getString(R.string.title_activity_new));
         } else {
+
             mInputTitle.setText(mTodo.getTitle());
             mInputContent.setText(mTodo.getContent());
 
@@ -147,7 +153,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         int id = item.getItemId();
 
         if (id == R.id.action_save) {
-            TodoStore todoStore = TodoStore.getInstance(this);
             String title = mInputTitle.getText().toString().trim();
             String content = mInputContent.getText().toString().trim();
             boolean hasDueDate = !mInputDueDate.getText().toString().isEmpty();
@@ -165,16 +170,15 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             if (mTodo == null) {
                 Todo todo = new Todo(title, content);
                 todo.setDueDate(dueDate);
-                todoStore.add(todo);
+                mTodoStore.add(todo);
                 Utils.toast(this, R.string.message_todo_created);
             } else {
-                Todo todo = todoStore.getById(mTodo.getId());
-                todo.setTitle(title);
-                todo.setContent(content);
-                todo.setDueDate(dueDate);
+                mTodo.setTitle(title);
+                mTodo.setContent(content);
+                mTodo.setDueDate(dueDate);
                 if (dueDate > System.currentTimeMillis())
-                    todo.setNotified(false);
-                todoStore.save(todo);
+                    mTodo.setNotified(false);
+                mTodoStore.save(mTodo);
                 Utils.toast(this, R.string.message_todo_updated);
             }
 

@@ -35,6 +35,7 @@ public class Todo implements Comparable<Todo>, Parcelable {
     final public static String COLUMN_NOTIFIED = "notified";
 
     final public static String EXTRA_TODO = "de.mohmann.moretodo.data.Todo";
+    final public static String EXTRA_ID = "de.mohmann.moretodo.data.Todo.ID";
 
     final private static String PARCEL_EXTRA_ID = "de.mohmann.moretodo.data.Todo.ID";
     final private static String PARCEL_EXTRA_TITLE = "de.mohmann.moretodo.data.Todo.TITLE";
