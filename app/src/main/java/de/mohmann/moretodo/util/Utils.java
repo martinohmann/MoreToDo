@@ -1,9 +1,13 @@
 package de.mohmann.moretodo.util;
 
 import android.content.Context;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.commonsware.cwac.anddown.AndDown;
 
 /**
  * Created by mohmann on 2/4/16.
@@ -37,6 +41,10 @@ public class Utils {
             return string.substring(0, len);
         }
         return string;
+    }
+
+    public static Spanned markdownToHtml(String str) {
+        return Html.fromHtml(new AndDown().markdownToHtml(str));
     }
 
     public static boolean isNotEmpty(CharSequence str) {

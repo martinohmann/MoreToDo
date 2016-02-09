@@ -85,6 +85,9 @@
         <item>-1</item>
     </string-array>
 
+    <string name="pref_title_markdown_enable">Enable Markdown</string>
+    <string name="pref_description_markdown_enable">Transform markdown syntax in todo content to HTML (experimental)</string>
+
     <!-- Settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
 

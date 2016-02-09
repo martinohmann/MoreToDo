@@ -10,6 +10,7 @@ public class Preferences {
 
     /* general prefs */
     final public static String PREF_AUTOREMOVE_DONE_TODOS = "autoremove_done_todos";
+    final public static String PREF_MARKDOWN_ENABLE = "markdown_enable";
 
     /* notification prefs */
     final public static String PREF_NOTIFICATIONS_ENABLE = "notifications_enable";
@@ -22,6 +23,14 @@ public class Preferences {
 
     public static int getAutoremoveDoneTodos(Context context) {
         return getIntegerPreference(context, PREF_AUTOREMOVE_DONE_TODOS, -1);
+    }
+
+    public static void setMarkdownEnabled(Context context, boolean value) {
+        setBooleanPreference(context, PREF_MARKDOWN_ENABLE, value);
+    }
+
+    public static boolean isMarkdownEnabled(Context context) {
+        return getBooleanPreference(context, PREF_MARKDOWN_ENABLE, false);
     }
 
     /* notification prefs getters and setters */
