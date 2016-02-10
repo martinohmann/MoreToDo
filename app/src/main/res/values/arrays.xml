@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="todo_list_context_menu">
-        <item>@string/edit_item</item>
-        <item>@string/delete_item</item>
+        <item>@string/action_edit_item</item>
+        <item>@string/action_delete_item</item>
     </array>
 </resources>

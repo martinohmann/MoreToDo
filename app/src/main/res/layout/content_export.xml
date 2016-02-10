@@ -7,7 +7,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="de.mohmann.moretodo.activities.ExportActivity"
     tools:showIn="@layout/activity_export"
-    android:background="@color/default_background">
+    android:background="@color/colorDefaultBackground">
 
 
     <ScrollView

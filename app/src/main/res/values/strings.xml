@@ -1,52 +1,54 @@
 <resources>
-    <item name="TAG_VIEWHOLDER" type="id" />
-    <item name="TAG_TODO" type="id" />
-
     <string name="app_name">MoreToDo</string>
+
+    <!-- activity titles -->
     <string name="title_activity_new">New Todo</string>
     <string name="title_activity_edit">Edit Todo</string>
     <string name="title_activity_detail">Detail</string>
     <string name="title_activity_export">Export</string>
+    <string name="title_activity_settings">Settings</string>
 
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="cancel">Cancel</string>
-    <string name="close">Close</string>
+    <!-- tag ids -->
+    <item name="TAG_VIEWHOLDER" type="id" />
+    <item name="TAG_TODO" type="id" />
 
-    <string name="alert_delete_item">Delete todo</string>
-    <string name="question_delete_item_long">Do you really want to delete this todo?</string>
+    <!-- button labels -->
+    <string name="button_label_yes">Yes</string>
+    <string name="button_label_no">No</string>
+    <string name="button_label_cancel">Cancel</string>
+    <string name="button_label_close">Close</string>
 
-    <string name="alert_delete_items">Delete todos</string>
-    <string name="question_delete_items_long">Do you really want to delete all done todos?</string>
+    <!-- dialog strings -->
+    <string name="dialog_title_delete_item">Delete todo</string>
+    <string name="dialog_content_delete_item">Do you really want to delete this todo?</string>
 
+    <string name="dialog_title_delete_items">Delete todos</string>
+    <string name="dialog_content_delete_items">Do you really want to delete all done todos?</string>
+
+    <string name="dialog_title_about">About</string>
+    <string name="dialog_description_about">Simple todo app using Material Design.</string>
+    <string name="dialog_credits_about">\u00A9 2016 Martin Ohmann\nhttps://mohmann.de\n\nThis application is licensed under the GNU GPL and can be found on Github:\nhttps://github.com/martinohmann/MoreToDo</string>
+
+    <!-- option and context menu strings -->
+    <string name="title_context_menu_list_item">Choose action</string>
+    <string name="action_edit_item">Edit todo</string>
+    <string name="action_delete_item">Delete todo</string>
+    <string name="action_mark_item_done">Mark as done</string>
+    <string name="action_clear_done">Clear done todos</string>
+    <string name="action_view">View</string>
     <string name="action_settings">Settings</string>
     <string name="action_save">Save</string>
     <string name="action_copy">Copy to clipboard</string>
 
-    <string name="todo_list_empty">Nothing to do</string>
-    <string name="property_unknown">&lt;unknown&gt;</string>
-
-    <string name="title_todo_list_context_menu">Choose action</string>
-    <string name="edit_item">Edit todo</string>
-    <string name="delete_item">Delete todo</string>
-    <string name="mark_item_done">Mark as done</string>
-    <string name="clear_done">Clear done todos</string>
-    <string name="view">View</string>
-
+    <!-- TextView and EditText labels -->
     <string name="label_title">Title</string>
     <string name="label_content">Content</string>
     <string name="label_created">Created</string>
     <string name="label_finished">Finished</string>
     <string name="label_done">Done</string>
     <string name="label_due_date">Due date</string>
-    <string name="label_use_due_date">Use due date</string>
 
-    <string name="label_export">Todo list as JSON</string>
-
-    <string name="text_not_done_yet">not done yet</string>
-    <string name="text_empty">-</string>
-    <string name="icon">Icon</string>
-
+    <!-- toast message strings -->
     <string name="message_todo_created">Todo created</string>
     <string name="message_todo_updated">Todo updated</string>
     <string name="message_todo_deleted">Todo deleted</string>
@@ -55,34 +57,57 @@
     <string name="message_todo_enter_duedate">Pick a due date</string>
     <string name="message_todo_done">Marked as done</string>
     <string name="message_todo_pending">Marked as pending</string>
-    <string name="message_todo_autoremoval">Autoremoved %d todo</string>
-    <string name="message_todo_autoremoval_plural">Autoremoved %d todos</string>
+    <string name="message_todo_autoremoved" formatted="false">Autoremoved %d %s</string>
     <string name="message_copied_to_clipboard">Copied to clipboard</string>
 
+    <!-- tab labels -->
     <string name="label_tab_all">All</string>
     <string name="label_tab_pending">Pending</string>
     <string name="label_tab_done">Done</string>
 
-    <string name="search_hint">Search\u2026</string>
-    <string name="search_filter_label">Filter:</string>
-    <string name="search_filter_text">none</string>
+    <!-- search strings -->
+    <string name="hint_search">Search\u2026</string>
+    <string name="label_search_filter">Filter:</string>
+    <string name="text_search_filter">none</string>
 
-    <string name="title_activity_settings">Settings</string>
+    <!-- generic text -->
+    <string name="text_not_done_yet">not done yet</string>
+    <string name="text_empty">-</string>
+    <string name="text_list_empty">Nothing to do</string>
+    <string name="text_property_unknown">&lt;unknown&gt;</string>
 
-    <string name="title_about_dialog">About</string>
-    <string name="about_description">Simple todo app using Material Design.</string>
-    <string name="about_credits">\u00A9 2016 Martin Ohmann\nhttps://mohmann.de\n\nThis application is licensed under the GNU GPL and can be found on Github:\nhttps://github.com/martinohmann/MoreToDo</string>
+    <!-- words -->
+    <string name="word_icon">icon</string>
+    <string name="word_todo">todo</string>
+    <string name="word_todos">todos</string>
 
-    <!-- Strings related to Settings -->
+    <!-- date strings -->
+    <string name="date_day">day</string>
+    <string name="date_days">days</string>
+    <string name="date_hour">hour</string>
+    <string name="date_hours">hours</string>
+    <string name="date_minute">minute</string>
+    <string name="date_minutes">minutes</string>
+    <string name="date_just_now">just now</string>
+    <string name="date_format_human_future" formatted="false">in %d %s</string>
+    <string name="date_format_human_past" formatted="false">%d %s ago</string>
 
-    <!-- General settings -->
+    <!-- settings strings -->
+
+    <!-- settings headers -->
     <string name="pref_header_general">General</string>
+    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_header_github">View project on Github</string>
+    <string name="pref_header_description_github">https://github.com/martinohmann/MoreToDo</string>
+    <string name="pref_header_export">Export todos</string>
+    <string name="pref_header_description_export">JSON export of the todo list</string>
 
+    <!-- general settings strings -->
+
+    <!-- category autoremoval -->
     <string name="pref_title_category_autoremoval">Autoremoval</string>
-
     <string name="pref_title_autoremove_enable">Autoremove done todos</string>
     <string name="pref_description_autoremove_enable">Done todos will get deleted after the specified amount of time</string>
-
     <string name="pref_title_autoremove_done_todos">Remove done todos after</string>
     <string-array name="pref_autoremove_list_titles">
         <item>One month</item>
@@ -99,26 +124,19 @@
         <item>60</item>
     </string-array>
 
+    <!-- category content display -->
     <string name="pref_title_category_content_display">Content display</string>
-
     <string name="pref_title_markdown_enable">Enable Markdown</string>
     <string name="pref_description_markdown_enable">Transform markdown syntax in todo content to HTML (experimental)</string>
 
+    <!-- category application -->
     <string name="pref_title_category_application">Application</string>
     <string name="pref_title_application_version">Application Version</string>
 
-    <!-- Settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
+    <!-- notification settings strings -->
 
     <string name="pref_title_notifications_enable">Enable notifications</string>
     <string name="pref_description_notifications_enable">Todos with a set due date can send out notifications</string>
-
     <string name="pref_title_notifications_vibrate">Vibrate</string>
-
-    <!-- Other settings headers -->
-    <string name="pref_header_github">View project on Github</string>
-    <string name="pref_header_description_github">https://github.com/martinohmann/MoreToDo</string>
-    <string name="pref_header_export">Export todos</string>
-    <string name="pref_header_description_export">JSON export of the todo list</string>
 
 </resources>

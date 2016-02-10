@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.TodoListFragment"
-    android:background="@color/list_background">
+    android:background="@color/colorListBackground">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
     <TextView android:id="@+id/todo_list_empty"
         android:layout_width="match_parent"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/todo_list_empty"
+        android:text="@string/text_list_empty"
         android:textAlignment="center"
         android:textColor="@color/colorTodoTextLight"
         android:layout_height="match_parent"

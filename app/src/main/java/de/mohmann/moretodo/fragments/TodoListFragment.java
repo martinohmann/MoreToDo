@@ -107,7 +107,7 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
         Resources res = getResources();
         if (v.getId() == R.id.todo_list) {
             String[] menuItems = res.getStringArray(R.array.todo_list_context_menu);
-            menu.setHeaderTitle(res.getString(R.string.title_todo_list_context_menu));
+            menu.setHeaderTitle(res.getString(R.string.title_context_menu_list_item));
 
             for (int i = 0; i < menuItems.length; i++) {
                 menu.add(Menu.NONE, i, i, menuItems[i]);

@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -136,10 +135,10 @@ public class DetailActivity extends AppCompatActivity implements DialogInterface
 
     private void buildDeleteDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.question_delete_item_long);
-        builder.setTitle(R.string.alert_delete_item);
-        builder.setPositiveButton(R.string.yes, this);
-        builder.setNegativeButton(R.string.cancel, this);
+        builder.setMessage(R.string.dialog_content_delete_item);
+        builder.setTitle(R.string.dialog_title_delete_item);
+        builder.setPositiveButton(R.string.button_label_yes, this);
+        builder.setNegativeButton(R.string.button_label_cancel, this);
         mDeleteDialog = builder.create();
     }
 

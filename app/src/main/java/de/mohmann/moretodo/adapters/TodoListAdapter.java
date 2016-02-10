@@ -132,18 +132,18 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
                 v.setAlpha(0.3f);
                 holder.titleView.setPaintFlags(paintFlags | Paint.STRIKE_THRU_TEXT_FLAG);
             }
-            holder.dateView.setText(DateFormatter.humanReadable(todo.getFinishDate()));
+            holder.dateView.setText(DateFormatter.humanReadable(getContext(), todo.getFinishDate()));
             holder.iconView.setImageResource(R.drawable.ic_done_black_18dp);
         } else {
             v.setAlpha(1f);
             holder.titleView.setPaintFlags(paintFlags & ~Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.dateView.setText(DateFormatter.humanReadable(todo.getCreationDate()));
+            holder.dateView.setText(DateFormatter.humanReadable(getContext(), todo.getCreationDate()));
             holder.iconView.setImageResource(R.drawable.ic_add_black_18dp);
         }
 
         if (!todo.isDone() && todo.getDueDate() != Todo.DATE_UNSET) {
             holder.dueDateContainer.setVisibility(View.VISIBLE);
-            holder.dueDate.setText(DateFormatter.humanReadable(todo.getDueDate()));
+            holder.dueDate.setText(DateFormatter.humanReadable(getContext(), todo.getDueDate()));
         } else {
             holder.dueDateContainer.setVisibility(View.GONE);
         }

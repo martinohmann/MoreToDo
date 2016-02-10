@@ -1,8 +1,13 @@
 package de.mohmann.moretodo.util;
 
+import android.content.Context;
+import android.content.res.Resources;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import de.mohmann.moretodo.R;
 
 /**
  * Created by mohmann on 2/3/16.
@@ -30,43 +35,35 @@ public class DateFormatter {
         return getFullDate(new Date(millis));
     }
 
-    private static String pluralSuffix(long number) {
-        if (number != 1)
-            return "s";
-        return "";
-    }
-
-    public static String humanReadable(final Date date) {
+    public static String humanReadable(final Context context, final Date date) {
         long diff = (System.currentTimeMillis() - date.getTime()) / 1000;
-
-        String format = "%d %s%s ago";
-        String humanDate;
-        long adjusted;
+        Resources res = context.getResources();
+        String format = res.getString(R.string.date_format_human_past);
 
         if (diff < 0) {
             diff = -diff;
-            format = "in %d %s%s";
+            format = res.getString(R.string.date_format_human_past);
         }
 
         if (diff > 604800) {
-             humanDate = getShortDate(date);
+            return getShortDate(date);
         } else if (diff > 86400) {
-             adjusted = diff / 86400;
-             humanDate = String.format(format, adjusted, "day", pluralSuffix(adjusted));
+            diff /= 86400;
+            return String.format(format, diff,
+                    Utils.pluralize(context, diff, R.string.date_day, R.string.date_days));
         } else if (diff > 3600) {
-             adjusted = diff / 3600;
-             humanDate = String.format(format, adjusted, "hour", pluralSuffix(adjusted));
+            diff /= 3600;
+            return String.format(format, diff,
+                    Utils.pluralize(context, diff, R.string.date_hour, R.string.date_hours));
         } else if (diff > 60) {
-             adjusted = diff / 60;
-             humanDate = String.format(format, adjusted, "minute", pluralSuffix(adjusted));
-        } else {
-             humanDate = "just now";
+            diff /= 60;
+            return String.format(format, diff,
+                    Utils.pluralize(context, diff, R.string.date_minute, R.string.date_minutes));
         }
-
-        return humanDate;
+        return res.getString(R.string.date_just_now);
     }
 
-    public static String humanReadable(final long millis) {
-        return humanReadable(new Date(millis));
+    public static String humanReadable(final Context context, final long millis) {
+        return humanReadable(context, new Date(millis));
     }
 }

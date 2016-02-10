@@ -7,7 +7,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.DetailActivity"
     tools:showIn="@layout/activity_detail"
-    android:background="@color/default_background">
+    android:background="@color/colorDefaultBackground">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -135,7 +135,7 @@
                         android:id="@+id/icon_created"
                         android:layout_below="@+id/label_created"
                         android:paddingTop="2dp"
-                        android:tint="@color/icon_tint_default" />
+                        android:tint="@color/colorDefaultIconTint" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -188,7 +188,7 @@
                         android:id="@+id/icon_done"
                         android:layout_below="@+id/label_done"
                         android:paddingTop="2dp"
-                        android:tint="@color/icon_tint_default" />
+                        android:tint="@color/colorDefaultIconTint" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -243,7 +243,7 @@
                         android:id="@+id/icon_due_date"
                         android:layout_below="@+id/label_due_date"
                         android:paddingTop="2dp"
-                        android:tint="@color/icon_tint_default" />
+                        android:tint="@color/colorDefaultIconTint" />
 
                     <TextView
                         android:layout_width="match_parent"

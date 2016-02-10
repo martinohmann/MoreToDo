@@ -5,19 +5,19 @@
     <item
         android:id="@+id/action_edit"
         android:orderInCategory="100"
-        android:title="@string/edit_item"
+        android:title="@string/action_edit_item"
         android:icon="@drawable/ic_mode_edit_white_24dp"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_delete"
         android:orderInCategory="100"
-        android:title="@string/delete_item"
+        android:title="@string/action_delete_item"
         android:icon="@drawable/ic_delete_white_24dp"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_mark_done"
         android:orderInCategory="100"
         android:icon="@drawable/ic_done_white_24dp"
-        android:title="@string/mark_item_done"
+        android:title="@string/action_mark_item_done"
         app:showAsAction="never" />
 </menu>

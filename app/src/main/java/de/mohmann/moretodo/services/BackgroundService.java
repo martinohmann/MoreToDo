@@ -94,11 +94,9 @@ public class BackgroundService extends Service {
             }
 
             if (removed > 0) {
-                if (removed == 1) {
-                    Utils.toast(mContext, R.string.message_todo_autoremoval, removed);
-                } else {
-                    Utils.toast(mContext, R.string.message_todo_autoremoval_plural, removed);
-                }
+                Utils.toast(mContext, R.string.message_todo_autoremoved, removed,
+                        Utils.pluralize(mContext, removed, R.string.word_todo,
+                                R.string.word_todos));
             }
         }
 
@@ -168,9 +166,9 @@ public class BackgroundService extends Service {
         PendingIntent pendingMarkIntent = PendingIntent.getBroadcast(this, 0, markIntent,
                 Intent.FILL_IN_DATA);
 
-        builder.addAction(R.drawable.ic_assignment_white_18dp, getString(R.string.view),
+        builder.addAction(R.drawable.ic_assignment_white_18dp, getString(R.string.action_view),
                 pendingContentIntent);
-        builder.addAction(R.drawable.ic_done_white_18dp, getString(R.string.mark_item_done),
+        builder.addAction(R.drawable.ic_done_white_18dp, getString(R.string.action_mark_item_done),
                 pendingMarkIntent);
 
         /* deploy */

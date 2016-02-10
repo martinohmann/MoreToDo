@@ -36,7 +36,7 @@ public class Utils {
         return shorten(string, len, true);
     }
 
-    public static String shorten(final String string, int len, boolean ellipsis) {
+    public static String shorten(String string, int len, boolean ellipsis) {
         if (string == null)
             return null;
 
@@ -47,6 +47,18 @@ public class Utils {
             return string.substring(0, len);
         }
         return string;
+    }
+
+    public static String pluralize(long number, String singular, String plural) {
+        if (number != 1)
+            return plural;
+        return singular;
+    }
+
+    public static String pluralize(final Context context, long number, int singularId,
+                                   int pluralId) {
+        return pluralize(number, context.getResources().getString(singularId),
+                context.getResources().getString(pluralId));
     }
 
     public static Spanned markdownToHtml(String str) {
@@ -71,8 +83,8 @@ public class Utils {
 
     public static int safeLongToInt(long l) {
         if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException
-                    (l + " cannot be cast to int without changing its value.");
+            throw new IllegalArgumentException(l + " cannot be cast to int " +
+                    "without changing its value.");
         }
         return (int) l;
     }

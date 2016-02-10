@@ -155,17 +155,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         View messageView = getLayoutInflater().inflate(R.layout.about, null, false);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name);
-        builder.setPositiveButton(R.string.close, this);
+        builder.setPositiveButton(R.string.button_label_close, this);
         builder.setView(messageView);
         mAboutDialog = builder.create();
     }
 
     private void buildDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.question_delete_items_long);
-        builder.setTitle(R.string.alert_delete_items);
-        builder.setPositiveButton(R.string.yes, this);
-        builder.setNegativeButton(R.string.cancel, this);
+        builder.setMessage(R.string.dialog_content_delete_items);
+        builder.setTitle(R.string.dialog_title_delete_items);
+        builder.setPositiveButton(R.string.button_label_yes, this);
+        builder.setNegativeButton(R.string.button_label_cancel, this);
         mDeleteDialog = builder.create();
     }
 

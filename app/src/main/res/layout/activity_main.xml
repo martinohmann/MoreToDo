@@ -40,7 +40,7 @@
         android:layout_height="45dp"
         android:id="@+id/search_filter"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:background="@color/search_filter_background"
+        android:background="@color/colorSearchFilterBackground"
         android:visibility="gone">
 
         <include layout="@layout/toolbar_shadow"
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/search_filter_label"
+                android:text="@string/label_search_filter"
                 android:id="@+id/search_filter_label"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical" />
@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/search_filter_text"
+                android:text="@string/text_search_filter"
                 android:id="@+id/search_filter_text"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/search_filter_label"
@@ -84,7 +84,7 @@
                 android:maxHeight="18dp"
                 android:src="@drawable/ic_clear_black_18dp"
                 android:alpha="0.5"
-                android:contentDescription="@string/icon"
+                android:contentDescription="@string/word_icon"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true" />
 

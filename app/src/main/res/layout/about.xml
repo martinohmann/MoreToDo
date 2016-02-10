@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:text="@string/about_description" />
+        android:text="@string/dialog_description_about" />
 
     <TextView
         android:id="@+id/about_credits"
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
         android:textSize="16sp"
-        android:text="@string/about_credits"
+        android:text="@string/dialog_credits_about"
         android:autoLink="web" />
 
 </LinearLayout>
