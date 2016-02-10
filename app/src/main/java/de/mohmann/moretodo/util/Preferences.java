@@ -84,10 +84,6 @@ public class Preferences {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(key, value).apply();
     }
 
-    private static boolean setIntegerPrefrenceBlocking(Context context, String key, int value) {
-        return PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(key, value).commit();
-    }
-
     private static long getLongPreference(Context context, String key, long defaultValue) {
         return PreferenceManager.getDefaultSharedPreferences(context).getLong(key, defaultValue);
     }
