@@ -159,7 +159,6 @@ public class DetailActivity extends AppCompatActivity implements DialogInterface
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_detail, menu);
 
         if (mTodo != null && mTodo.isDone()) {
@@ -171,9 +170,6 @@ public class DetailActivity extends AppCompatActivity implements DialogInterface
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (mTodo == null)
@@ -192,6 +188,9 @@ public class DetailActivity extends AppCompatActivity implements DialogInterface
 
             mTodo.setDone(true);
             mTodoStore.save(mTodo);
+
+            /* disable options menu entry */
+            item.setEnabled(false);
 
             Utils.toast(this, R.string.message_todo_done);
 

@@ -1,5 +1,6 @@
 package de.mohmann.moretodo.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -9,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +35,7 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
     private SwipeRefreshLayout mSwipeLayout;
     private TodoListAdapter mTodoListAdapter;
     private TodoStore mTodoStore;
+    private Activity mActivity;
 
     public static TodoListFragment newInstance(int listType) {
         TodoListFragment f = new TodoListFragment();
@@ -51,9 +52,10 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
         View view = inflater.inflate(R.layout.fragment_todo_list, container, false);
         int listType = bundle.getInt(EXTRA_LIST_TYPE, TodoListAdapter.LIST_ALL);
 
+        mActivity = getActivity();
         mTodoStore = TodoStore.getInstance(getContext());
         mTodoStore.addOnTodoListUpdateListener(this);
-        mTodoListAdapter = new TodoListAdapter(getActivity(), R.layout.todo_list_item,
+        mTodoListAdapter = new TodoListAdapter(mActivity, R.layout.todo_list_item,
                 mTodoStore.getList(), listType);
         mTodoListAdapter.applyFilter();
 
@@ -82,11 +84,11 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        Intent intent = new Intent(mActivity, DetailActivity.class);
         final Todo todo = (Todo) view.getTag(R.id.TAG_TODO);
         intent.putExtra(Todo.EXTRA_ID, todo.getId());
         startActivity(intent);
-        getActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+        mActivity.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 
 
@@ -106,12 +108,8 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         Resources res = getResources();
         if (v.getId() == R.id.todo_list) {
-            String[] menuItems = res.getStringArray(R.array.todo_list_context_menu);
+            mActivity.getMenuInflater().inflate(R.menu.context_menu_list_item, menu);
             menu.setHeaderTitle(res.getString(R.string.title_context_menu_list_item));
-
-            for (int i = 0; i < menuItems.length; i++) {
-                menu.add(Menu.NONE, i, i, menuItems[i]);
-            }
         }
     }
 
@@ -119,24 +117,20 @@ public class TodoListFragment extends Fragment implements AdapterView.OnItemClic
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info =
                 (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int menuItemIndex = item.getItemId();
+        int id = item.getItemId();
         View v = info.targetView;
 
         if (v.getId() == R.id.todo_list_item) {
             final Todo todo = (Todo) v.getTag(R.id.TAG_TODO);
 
-            switch (menuItemIndex) {
-                case 0: /* edit */
-                    Intent intent = new Intent(getActivity(), EditActivity.class);
-                    intent.putExtra(Todo.EXTRA_ID, todo.getId());
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(0, 0);
-                    break;
-                case 1: /* delete */
-                    Log.d(TAG, "deleting todo: " + todo.toString());
-                    mTodoStore.remove(todo);
-                    Utils.toast(getActivity(), R.string.message_todo_deleted);
-                    break;
+            if (id == R.id.action_edit) {
+                Intent intent = new Intent(mActivity, EditActivity.class);
+                intent.putExtra(Todo.EXTRA_ID, todo.getId());
+                startActivity(intent);
+                mActivity.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+            } else if (id == R.id.action_delete) {
+                mTodoStore.remove(todo);
+                Utils.toast(mActivity, R.string.message_todo_deleted);
             }
         }
         return true;
