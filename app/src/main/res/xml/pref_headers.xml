@@ -13,17 +13,17 @@
     </header>
 
     <header
-        android:title="View project on Github"
-        android:summary="https://github.com/martinohmann/MoreToDo">
+        android:title="@string/pref_header_github"
+        android:summary="@string/pref_header_description_github">
         <intent android:action="android.intent.action.VIEW"
             android:data="https://github.com/martinohmann/MoreToDo" />
     </header>
 
-    <!--<header
-        android:title="Export"
-        android:summary="Export todo list as JSON">
+    <header
+        android:title="@string/pref_header_export"
+        android:summary="@string/pref_header_description_export">
         <intent android:targetPackage="de.mohmann.moretodo"
             android:targetClass="de.mohmann.moretodo.activities.ExportActivity" />
-    </header>-->
+    </header>
 
 </preference-headers>

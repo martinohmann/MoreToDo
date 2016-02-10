@@ -29,10 +29,8 @@ import de.mohmann.moretodo.fragments.TodoListFragment;
 import de.mohmann.moretodo.services.BackgroundService;
 import de.mohmann.moretodo.util.Utils;
 
-public class MainActivity extends AppCompatActivity
-        implements View.OnClickListener,
-        DialogInterface.OnClickListener,
-        ViewPager.OnPageChangeListener,
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        DialogInterface.OnClickListener, ViewPager.OnPageChangeListener,
         TodoStore.OnTodoListFilterListener {
 
     final public static String TAG = "MainActivity";
@@ -98,8 +96,7 @@ public class MainActivity extends AppCompatActivity
 
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            mTodoStore.filterBy(query);
+            mTodoStore.filterBy(intent.getStringExtra(SearchManager.QUERY));
             invalidateOptionsMenu();
         }
     }

@@ -32,7 +32,7 @@ public class TodoStore {
 
     private TodoStore(Context context) {
         mDbHelper = DatabaseHelper.getInstance(context);
-        load();
+        updateList();
     }
 
     public void add(Todo todo) {
@@ -86,7 +86,7 @@ public class TodoStore {
             if (listener != null)
                 listener.onTodoListFilter(mFilter, enabled);
         }
-        load();
+        updateList();
     }
 
     public void filterBy(String filterString) {
@@ -109,7 +109,7 @@ public class TodoStore {
         return mTodoList;
     }
 
-    public void load() {
+    public void updateList() {
         if (mFilter.equals(FILTER_NONE)) {
             mTodoList = mDbHelper.getTodos();
         } else {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Autoremoval">
+    <PreferenceCategory android:title="@string/pref_title_category_autoremoval">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="autoremove_enable"
@@ -19,7 +19,7 @@
             android:title="@string/pref_title_autoremove_done_todos" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Display">
+    <PreferenceCategory android:title="@string/pref_title_category_content_display">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="markdown_enable"

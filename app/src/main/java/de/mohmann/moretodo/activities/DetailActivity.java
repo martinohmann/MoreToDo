@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,8 +25,7 @@ import de.mohmann.moretodo.util.DateFormatter;
 import de.mohmann.moretodo.util.Preferences;
 import de.mohmann.moretodo.util.Utils;
 
-public class DetailActivity extends AppCompatActivity
-        implements DialogInterface.OnClickListener {
+public class DetailActivity extends AppCompatActivity implements DialogInterface.OnClickListener {
 
     final public static String TAG = "DetailActivity";
 
@@ -71,8 +71,7 @@ public class DetailActivity extends AppCompatActivity
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(notificationId);
         }
-        
-        populateViews();
+
         buildDeleteDialog();
     }
     
@@ -136,12 +135,11 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void buildDeleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.question_delete_item_long)
-                .setTitle(R.string.alert_delete_item)
-                .setPositiveButton(R.string.yes, this)
-                .setNegativeButton(R.string.cancel, this);
-
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.question_delete_item_long);
+        builder.setTitle(R.string.alert_delete_item);
+        builder.setPositiveButton(R.string.yes, this);
+        builder.setNegativeButton(R.string.cancel, this);
         mDeleteDialog = builder.create();
     }
 

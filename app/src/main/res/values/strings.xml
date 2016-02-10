@@ -1,11 +1,12 @@
 <resources>
-    <item type="id" name="TAG_VIEWHOLDER"/>
-    <item type="id" name="TAG_TODO"/>
+    <item name="TAG_VIEWHOLDER" type="id" />
+    <item name="TAG_TODO" type="id" />
 
     <string name="app_name">MoreToDo</string>
     <string name="title_activity_new">New Todo</string>
     <string name="title_activity_edit">Edit Todo</string>
     <string name="title_activity_detail">Detail</string>
+    <string name="title_activity_export">Export</string>
 
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -20,6 +21,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="action_save">Save</string>
+    <string name="action_copy">Copy to clipboard</string>
 
     <string name="todo_list_empty">Nothing to do</string>
     <string name="property_unknown">&lt;unknown&gt;</string>
@@ -39,6 +41,8 @@
     <string name="label_due_date">Due date</string>
     <string name="label_use_due_date">Use due date</string>
 
+    <string name="label_export">Todo list as JSON</string>
+
     <string name="text_not_done_yet">not done yet</string>
     <string name="text_empty">-</string>
     <string name="icon">Icon</string>
@@ -53,6 +57,7 @@
     <string name="message_todo_pending">Marked as pending</string>
     <string name="message_todo_autoremoval">Autoremoved %d todo</string>
     <string name="message_todo_autoremoval_plural">Autoremoved %d todos</string>
+    <string name="message_copied_to_clipboard">Copied to clipboard</string>
 
     <string name="label_tab_all">All</string>
     <string name="label_tab_pending">Pending</string>
@@ -73,6 +78,8 @@
     <!-- General settings -->
     <string name="pref_header_general">General</string>
 
+    <string name="pref_title_category_autoremoval">Autoremoval</string>
+
     <string name="pref_title_autoremove_enable">Autoremove done todos</string>
     <string name="pref_description_autoremove_enable">Done todos will get deleted after the specified amount of time</string>
 
@@ -92,6 +99,8 @@
         <item>60</item>
     </string-array>
 
+    <string name="pref_title_category_content_display">Content display</string>
+
     <string name="pref_title_markdown_enable">Enable Markdown</string>
     <string name="pref_description_markdown_enable">Transform markdown syntax in todo content to HTML (experimental)</string>
 
@@ -106,8 +115,10 @@
 
     <string name="pref_title_notifications_vibrate">Vibrate</string>
 
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Other settings headers -->
+    <string name="pref_header_github">View project on Github</string>
+    <string name="pref_header_description_github">https://github.com/martinohmann/MoreToDo</string>
+    <string name="pref_header_export">Export todos</string>
+    <string name="pref_header_description_export">JSON export of the todo list</string>
 
 </resources>
