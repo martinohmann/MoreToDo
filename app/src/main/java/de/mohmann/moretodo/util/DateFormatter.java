@@ -42,7 +42,7 @@ public class DateFormatter {
 
         if (diff < 0) {
             diff = -diff;
-            format = res.getString(R.string.date_format_human_past);
+            format = res.getString(R.string.date_format_human_future);
         }
 
         if (diff > 604800) {
