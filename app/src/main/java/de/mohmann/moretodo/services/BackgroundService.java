@@ -60,51 +60,57 @@ public class BackgroundService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (Preferences.isNotificationsEnabled(mContext)) {
-            Log.d(TAG, String.format("[%s] %s", new Date(), "notification background task"));
-
-            for (Todo todo : mTodoStore.getList()) {
-                if (todo.isDone() || todo.getDueDate() == Todo.DATE_UNSET || todo.isNotified()) {
-                    continue;
-                }
-                if (todo.getDueDate() <= System.currentTimeMillis()) {
-                    notify(todo);
-                    todo.setNotified(true);
-                    mTodoStore.save(todo);
-                }
-            }
+            notifyDueTodos();
         }
 
         if (Preferences.isAutoremoveEnabled(mContext)) {
-            Log.d(TAG, String.format("[%s] %s", new Date(), "autoremoval background task"));
-
-            final long interval = Preferences.getAutoremoveInterval(mContext) * 1000;
-            int removed = 0;
-
-            /* iterate over a copy of the list to avoid concurrent modification */
-            List<Todo> todoList = new ArrayList<>(mTodoStore.getList());
-
-            for (Todo todo : todoList) {
-                if (!todo.isDone())
-                    continue;
-
-                if (System.currentTimeMillis() - todo.getFinishDate() >= interval) {
-                    mTodoStore.remove(todo);
-                    removed++;
-                }
-            }
-
-            if (removed > 0) {
-                Utils.toast(mContext, R.string.message_todo_autoremoved, removed,
-                        Utils.pluralize(mContext, removed, R.string.word_todo,
-                                R.string.word_todos));
-            }
+            removeDoneTodos();
         }
 
-        // I don't want this service to stay in memory, so I stop it
-        // immediately after doing what I wanted it to do.
         stopSelf();
 
         return START_NOT_STICKY;
+    }
+
+    private void notifyDueTodos() {
+        Log.d(TAG, String.format("[%s] %s", new Date(), "notification background task"));
+
+        for (Todo todo : mTodoStore.getList()) {
+            if (todo.isDone() || todo.getDueDate() == Todo.DATE_UNSET || todo.isNotified()) {
+                continue;
+            }
+            if (todo.getDueDate() <= System.currentTimeMillis()) {
+                notify(todo);
+                todo.setNotified(true);
+                mTodoStore.save(todo);
+            }
+        }
+    }
+
+    private void removeDoneTodos() {
+        Log.d(TAG, String.format("[%s] %s", new Date(), "autoremoval background task"));
+
+        final long interval = Preferences.getAutoremoveInterval(mContext) * 1000;
+        int removed = 0;
+
+            /* iterate over a copy of the list to avoid concurrent modification */
+        List<Todo> todoList = new ArrayList<>(mTodoStore.getList());
+
+        for (Todo todo : todoList) {
+            if (!todo.isDone())
+                continue;
+
+            if (System.currentTimeMillis() - todo.getFinishDate() >= interval) {
+                mTodoStore.remove(todo);
+                removed++;
+            }
+        }
+
+        if (removed > 0) {
+            Utils.toast(mContext, R.string.message_todo_autoremoved, removed,
+                    Utils.pluralize(mContext, removed, R.string.word_todo,
+                            R.string.word_todos));
+        }
     }
 
     private void notify(final Todo todo) {
