@@ -50,7 +50,7 @@ public class Utils {
     }
 
     public static Spanned markdownToHtml(String str) {
-        return Html.fromHtml(new AndDown().markdownToHtml(str));
+        return Html.fromHtml(new AndDown().markdownToHtml(str), null, new ListTagHandler());
     }
 
     public static boolean isNotEmpty(CharSequence str) {
