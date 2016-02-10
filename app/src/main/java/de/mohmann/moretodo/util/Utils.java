@@ -2,7 +2,6 @@ package de.mohmann.moretodo.util;
 
 import android.content.Context;
 import android.text.Html;
-import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -61,8 +60,9 @@ public class Utils {
                 context.getResources().getString(pluralId));
     }
 
-    public static Spanned markdownToHtml(String str) {
-        return Html.fromHtml(new AndDown().markdownToHtml(str), null, new ListTagHandler());
+    public static CharSequence markdownToHtml(String str) {
+        return trimTrailingWhitespace(
+                Html.fromHtml(new AndDown().markdownToHtml(str), null, new ListTagHandler()));
     }
 
     public static boolean isNotEmpty(CharSequence str) {
@@ -87,5 +87,30 @@ public class Utils {
                     "without changing its value.");
         }
         return (int) l;
+    }
+
+    /**
+     * taken from stackoverflow: http://stackoverflow.com/a/10187511
+     *
+     * Trims trailing whitespace. Removes any of these characters:
+     * 0009, HORIZONTAL TABULATION
+     * 000A, LINE FEED
+     * 000B, VERTICAL TABULATION
+     * 000C, FORM FEED
+     * 000D, CARRIAGE RETURN
+     * 001C, FILE SEPARATOR
+     * 001D, GROUP SEPARATOR
+     * 001E, RECORD SEPARATOR
+     * 001F, UNIT SEPARATOR
+     * @return "" if source is null, otherwise string with all trailing whitespace removed
+     */
+    public static CharSequence trimTrailingWhitespace(CharSequence source) {
+        if(source == null)
+            return "";
+
+        int i = source.length();
+        // loop back to the first non-whitespace character
+        while (--i >= 0 && Character.isWhitespace(source.charAt(i)));
+        return source.subSequence(0, i+1);
     }
 }
