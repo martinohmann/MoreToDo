@@ -113,7 +113,7 @@ public class TodoStore {
         if (mFilter.equals(FILTER_NONE)) {
             mTodoList = mDbHelper.getTodos();
         } else {
-            mTodoList = mDbHelper.getTodosByFilter(mFilter);
+            mTodoList = mDbHelper.getTodosWithFilter(mFilter);
         }
         Log.i(TAG, String.format("loaded %d todos", mTodoList.size()));
         notifyDataSetChanged();

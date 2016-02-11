@@ -79,7 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private long insertTodo(Todo todo) {
-        Log.d(TAG, "inserting " + todo.toString());
+        Log.d(TAG, "inserting: " + todo.toString());
         SQLiteDatabase db = getWritableDatabase();
         long id = db.insert(Todo.TABLE_NAME, null, getTodoContentValues(todo));
         todo.setId(id);
@@ -136,9 +136,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return todos;
     }
 
-    public List<Todo> getTodosByFilter(String filter) {
+    public List<Todo> getTodosWithFilter(String filter) {
         filter = "%" + filter + "%";
-        Log.d(TAG, "loading todos");
+        Log.d(TAG, "loading todos with filter: " + filter);
         SQLiteDatabase db = getReadableDatabase();
         List<Todo> todos = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + Todo.TABLE_NAME +
