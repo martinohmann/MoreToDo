@@ -24,6 +24,7 @@ import de.mohmann.moretodo.data.Todo;
 import de.mohmann.moretodo.data.TodoStore;
 import de.mohmann.moretodo.util.DateFormatter;
 import de.mohmann.moretodo.util.Preferences;
+import de.mohmann.moretodo.util.ServiceUtils;
 import de.mohmann.moretodo.util.Utils;
 
 /**
@@ -53,7 +54,8 @@ public class BackgroundService extends Service {
         mTodoStore = TodoStore.getInstance(this);
 
         if (sPendingIntent == null) {
-            sPendingIntent = PendingIntent.getService(this, 0, new Intent(this, BackgroundService.class), 0);
+            sPendingIntent = PendingIntent.getService(this, ServiceUtils.FLAG_SERVICE_RUNNING,
+                    new Intent(this, BackgroundService.class), 0);
         }
     }
 
@@ -130,9 +132,11 @@ public class BackgroundService extends Service {
 
         if (!todo.getContent().isEmpty()) {
             builder.setContentText(Utils.shorten(todo.getContent(), 140));
+            builder.setSubText(date);
+        } else {
+            builder.setContentText(date);
         }
 
-        builder.setSubText(date);
         builder.setSmallIcon(R.drawable.ic_assignment_white_48dp);
 
         builder.setTicker(String.format("%s: %s", date, todo.getTitle()));

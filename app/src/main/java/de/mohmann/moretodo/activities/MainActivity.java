@@ -2,6 +2,7 @@ package de.mohmann.moretodo.activities;
 
 import android.app.AlertDialog;
 import android.app.SearchManager;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
@@ -27,6 +29,7 @@ import de.mohmann.moretodo.adapters.ViewPagerAdapter;
 import de.mohmann.moretodo.data.TodoStore;
 import de.mohmann.moretodo.fragments.TodoListFragment;
 import de.mohmann.moretodo.services.BackgroundService;
+import de.mohmann.moretodo.util.ServiceUtils;
 import de.mohmann.moretodo.util.Utils;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
@@ -83,7 +86,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buildDeleteDialog();
 
         /* start background service */
-        startService(new Intent(this, BackgroundService.class));
+        if (!ServiceUtils.isServiceRunning(this, BackgroundService.class)) {
+            Log.d(TAG, "starting BackgroundService");
+            startService(new Intent(this, BackgroundService.class));
+        }
 
         /* handle search intent */
         handleIntent(getIntent());
