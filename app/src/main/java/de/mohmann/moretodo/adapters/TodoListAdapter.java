@@ -20,7 +20,7 @@ import java.util.List;
 import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.data.Todo;
 import de.mohmann.moretodo.data.TodoStore;
-import de.mohmann.moretodo.util.DateFormatter;
+import de.mohmann.moretodo.util.DateUtils;
 import de.mohmann.moretodo.util.Utils;
 
 /**
@@ -132,18 +132,18 @@ public class TodoListAdapter extends ArrayAdapter<Todo> implements View.OnClickL
                 v.setAlpha(0.3f);
                 holder.titleView.setPaintFlags(paintFlags | Paint.STRIKE_THRU_TEXT_FLAG);
             }
-            holder.dateView.setText(DateFormatter.humanReadable(getContext(), todo.getFinishDate()));
+            holder.dateView.setText(DateUtils.humanReadable(getContext(), todo.getFinishDate()));
             holder.iconView.setImageResource(R.drawable.ic_done_black_18dp);
         } else {
             v.setAlpha(1f);
             holder.titleView.setPaintFlags(paintFlags & ~Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.dateView.setText(DateFormatter.humanReadable(getContext(), todo.getCreationDate()));
+            holder.dateView.setText(DateUtils.humanReadable(getContext(), todo.getCreationDate()));
             holder.iconView.setImageResource(R.drawable.ic_add_black_18dp);
         }
 
         if (!todo.isDone() && todo.getDueDate() != Todo.DATE_UNSET) {
             holder.dueDateContainer.setVisibility(View.VISIBLE);
-            holder.dueDate.setText(DateFormatter.humanReadable(getContext(), todo.getDueDate()));
+            holder.dueDate.setText(DateUtils.humanReadable(getContext(), todo.getDueDate()));
         } else {
             holder.dueDateContainer.setVisibility(View.GONE);
         }

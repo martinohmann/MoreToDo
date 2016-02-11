@@ -20,7 +20,7 @@ import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.data.Todo;
 import de.mohmann.moretodo.data.TodoStore;
 import de.mohmann.moretodo.services.BackgroundService;
-import de.mohmann.moretodo.util.DateFormatter;
+import de.mohmann.moretodo.util.DateUtils;
 import de.mohmann.moretodo.util.Preferences;
 import de.mohmann.moretodo.util.Utils;
 
@@ -97,17 +97,17 @@ public class DetailActivity extends AppCompatActivity implements DialogInterface
             mContainerContent.setVisibility(View.VISIBLE);
         }
 
-        mCreatedView.setText(DateFormatter.getFullDate(mTodo.getCreationDate()));
+        mCreatedView.setText(DateUtils.getFullDate(mTodo.getCreationDate()));
 
         if (mTodo.isDone()) {
             mDoneView.setImageResource(R.drawable.ic_done_black_18dp);
-            mFinishedView.setText(DateFormatter.getFullDate(mTodo.getFinishDate()));
+            mFinishedView.setText(DateUtils.getFullDate(mTodo.getFinishDate()));
         }
 
         if (mTodo.getDueDate() == Todo.DATE_UNSET) {
             mContainerDueDate.setVisibility(View.GONE);
         } else {
-            mDueDateView.setText(DateFormatter.getFullDate(mTodo.getDueDate()));
+            mDueDateView.setText(DateUtils.getFullDate(mTodo.getDueDate()));
             mContainerDueDate.setVisibility(View.VISIBLE);
         }
     }

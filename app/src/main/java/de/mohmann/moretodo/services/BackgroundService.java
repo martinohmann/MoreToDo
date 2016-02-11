@@ -22,7 +22,7 @@ import de.mohmann.moretodo.R;
 import de.mohmann.moretodo.activities.DetailActivity;
 import de.mohmann.moretodo.data.Todo;
 import de.mohmann.moretodo.data.TodoStore;
-import de.mohmann.moretodo.util.DateFormatter;
+import de.mohmann.moretodo.util.DateUtils;
 import de.mohmann.moretodo.util.Preferences;
 import de.mohmann.moretodo.util.ServiceUtils;
 import de.mohmann.moretodo.util.Utils;
@@ -118,7 +118,7 @@ public class BackgroundService extends Service {
     private void notify(final Todo todo) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
 
-        String date = DateFormatter.getFullDate(todo.getDueDate());
+        String date = DateUtils.getFullDate(todo.getDueDate());
         builder.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND);
         builder.setContentTitle(todo.getTitle());
         int notificationId = 0;
