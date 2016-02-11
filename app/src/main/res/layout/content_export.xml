@@ -39,8 +39,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/json_export"
                         android:textColor="@color/colorTodoTextLight"
-                        android:fontFamily="monospace"
-                        android:textIsSelectable="true" />
+                        android:fontFamily="monospace" />
 
                 </RelativeLayout>
 
