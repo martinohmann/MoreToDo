@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 /**
  * Created by mohmann on 2/9/16.
  */
-public class Preferences {
+final public class Preferences {
 
     /* general prefs */
     final public static String PREF_AUTOREMOVE_ENABLE = "autoremove_enable";

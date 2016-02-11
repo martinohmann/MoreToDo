@@ -11,7 +11,7 @@ import com.commonsware.cwac.anddown.AndDown;
 /**
  * Created by mohmann on 2/4/16.
  */
-public class Utils {
+final public class Utils {
 
     public static void toast(final Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();

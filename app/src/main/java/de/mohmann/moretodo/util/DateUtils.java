@@ -12,7 +12,7 @@ import de.mohmann.moretodo.R;
 /**
  * Created by mohmann on 2/3/16.
  */
-public class DateUtils {
+final public class DateUtils {
 
     final private static String SHORT_FORMAT = "yyyy-MM-dd  HH:mm";
     final private static String LONG_FORMAT = "EEE, MMMM dd yyyy  HH:mm";
