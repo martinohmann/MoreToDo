@@ -126,6 +126,43 @@
 
     <!-- category content display -->
     <string name="pref_title_category_content_display">Content display</string>
+
+    <string name="pref_title_short_date_format">Short date format</string>
+    <string-array name="pref_short_date_format_list_titles">
+        <item>Feb 19 2016 13:57</item>
+        <item>19. Feb 2016 13:57</item>
+        <item>2016/02/19 13:57</item>
+        <item>19.02.2016 13:57</item>
+        <item>Feb 19 2016</item>
+        <item>19. Feb 2016</item>
+        <item>2016/02/19</item>
+        <item>19.02.2016</item>
+    </string-array>
+    <string-array name="pref_short_date_format_list_values">
+        <item>MMM dd yyyy HH:mm</item>
+        <item>dd. MMM yyyy HH:mm</item>
+        <item>yyyy/MM/dd HH:mm</item>
+        <item>dd.MM.yyyy HH:mm</item>
+        <item>MMM dd yyyy</item>
+        <item>dd. MMM yyyy</item>
+        <item>yyyy/MM/dd</item>
+        <item>dd.MM.yyyy</item>
+    </string-array>
+
+    <string name="pref_title_long_date_format">Long date format</string>
+    <string-array name="pref_long_date_format_list_titles">
+        <item>Fri, February 19 2016 13:57</item>
+        <item>Fri, 19. February 2016 13:57</item>
+        <item>Fri, 2016/02/19 13:57</item>
+        <item>Fri, 19.02.2016 13:57</item>
+    </string-array>
+    <string-array name="pref_long_date_format_list_values">
+        <item>EEE, MMMM dd yyyy HH:mm</item>
+        <item>EEE, dd. MMMM yyyy HH:mm</item>
+        <item>EEE, yyyy/MM/dd HH:mm</item>
+        <item>EEE, dd.MM.yyyy HH:mm</item>
+    </string-array>
+
     <string name="pref_title_markdown_enable">Enable Markdown</string>
     <string name="pref_description_markdown_enable">Transform markdown syntax in todo content to HTML (experimental)</string>
 

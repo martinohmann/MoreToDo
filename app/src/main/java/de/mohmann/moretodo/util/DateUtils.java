@@ -14,25 +14,22 @@ import de.mohmann.moretodo.R;
  */
 final public class DateUtils {
 
-    final private static String SHORT_FORMAT = "MMM dd yyyy  HH:mm";
-    final private static String LONG_FORMAT = "EEE, MMMM dd yyyy  HH:mm";
-    final private static SimpleDateFormat SHORT_FORMATTER = new SimpleDateFormat(SHORT_FORMAT, Locale.US);
-    final private static SimpleDateFormat LONG_FORMATTER = new SimpleDateFormat(LONG_FORMAT, Locale.US);
-
-    public static String getShortDate(final Date date) {
-        return SHORT_FORMATTER.format(date);
+    public static String getShortDate(final Context context, final Date date) {
+        String format = Preferences.getShortDateFormat(context);
+        return new SimpleDateFormat(format, Locale.US).format(date);
     }
 
-    public static String getShortDate(final long millis) {
-        return getShortDate(new Date(millis));
+    public static String getShortDate(final Context context, final long millis) {
+        return getShortDate(context, new Date(millis));
     }
 
-    public static String getFullDate(final Date date) {
-        return LONG_FORMATTER.format(date);
+    public static String getFullDate(final Context context, final Date date) {
+        String format = Preferences.getLongDateFormat(context);
+        return new SimpleDateFormat(format, Locale.US).format(date);
     }
 
-    public static String getFullDate(final long millis) {
-        return getFullDate(new Date(millis));
+    public static String getFullDate(final Context context, final long millis) {
+        return getFullDate(context, new Date(millis));
     }
 
     public static String humanReadable(final Context context, final Date date) {
@@ -46,7 +43,7 @@ final public class DateUtils {
         }
 
         if (diff > 604800) {
-            return getShortDate(date);
+            return getShortDate(context, date);
         } else if (diff > 86400) {
             diff /= 86400;
             return String.format(format, diff,

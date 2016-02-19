@@ -11,6 +11,8 @@ final public class Preferences {
     /* general prefs */
     final public static String PREF_AUTOREMOVE_ENABLE = "autoremove_enable";
     final public static String PREF_AUTOREMOVE_INTERVAL = "autoremove_interval";
+    final public static String PREF_SHORT_DATE_FORMAT = "short_date_format";
+    final public static String PREF_LONG_DATE_FORMAT = "long_date_format";
     final public static String PREF_MARKDOWN_ENABLE = "markdown_enable";
 
     /* notification prefs */
@@ -32,6 +34,22 @@ final public class Preferences {
 
     public static long getAutoremoveInterval(Context context) {
         return Long.parseLong(getStringPreference(context, PREF_AUTOREMOVE_INTERVAL, "3600"));
+    }
+
+    public static void setShortDateFormat(Context context, String value) {
+        setStringPreference(context, PREF_SHORT_DATE_FORMAT, value);
+    }
+
+    public static String getShortDateFormat(Context context) {
+        return getStringPreference(context, PREF_SHORT_DATE_FORMAT, "MMM dd yyyy HH:mm");
+    }
+
+    public static void setLongDateFormat(Context context, String value) {
+        setStringPreference(context, PREF_LONG_DATE_FORMAT, value);
+    }
+
+    public static String getLongDateFormat(Context context) {
+        return getStringPreference(context, PREF_LONG_DATE_FORMAT, "EEE, MMMM dd yyyy HH:mm");
     }
 
     public static void setMarkdownEnabled(Context context, boolean value) {

@@ -97,17 +97,17 @@ public class DetailActivity extends AppCompatActivity implements DialogInterface
             mContainerContent.setVisibility(View.VISIBLE);
         }
 
-        mCreatedView.setText(DateUtils.getFullDate(mTodo.getCreationDate()));
+        mCreatedView.setText(DateUtils.getFullDate(this, mTodo.getCreationDate()));
 
         if (mTodo.isDone()) {
             mDoneView.setImageResource(R.drawable.ic_done_black_18dp);
-            mFinishedView.setText(DateUtils.getFullDate(mTodo.getFinishDate()));
+            mFinishedView.setText(DateUtils.getFullDate(this, mTodo.getFinishDate()));
         }
 
         if (mTodo.getDueDate() == Todo.DATE_UNSET) {
             mContainerDueDate.setVisibility(View.GONE);
         } else {
-            mDueDateView.setText(DateUtils.getFullDate(mTodo.getDueDate()));
+            mDueDateView.setText(DateUtils.getFullDate(this, mTodo.getDueDate()));
             mContainerDueDate.setVisibility(View.VISIBLE);
         }
     }

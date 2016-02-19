@@ -118,7 +118,7 @@ public class BackgroundService extends Service {
     private void notify(final Todo todo) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
 
-        String date = DateUtils.getFullDate(todo.getDueDate());
+        String date = DateUtils.getFullDate(mContext, todo.getDueDate());
         builder.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND);
         builder.setContentTitle(todo.getTitle());
         int notificationId = 0;

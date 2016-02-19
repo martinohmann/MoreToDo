@@ -184,6 +184,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             setHasOptionsMenu(true);
 
             bindPreferenceSummaryToValue(findPreference("autoremove_interval"));
+            bindPreferenceSummaryToValue(findPreference("short_date_format"));
+            bindPreferenceSummaryToValue(findPreference("long_date_format"));
             setPreferenceSummary(findPreference("application_version"), sAppVersion);
         }
 

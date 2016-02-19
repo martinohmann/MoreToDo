@@ -80,7 +80,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
             if (mTodo.getDueDate() != Todo.DATE_UNSET) {
                 mCalendar.setTimeInMillis(mTodo.getDueDate());
-                mInputDueDate.setText(DateUtils.getFullDate(mTodo.getDueDate()));
+                mInputDueDate.setText(DateUtils.getFullDate(this, mTodo.getDueDate()));
             }
         }
     }
@@ -129,7 +129,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
         mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         mCalendar.set(Calendar.MINUTE, minute);
-        mInputDueDate.setText(DateUtils.getFullDate(mCalendar.getTime()));
+        mInputDueDate.setText(DateUtils.getFullDate(this, mCalendar.getTime()));
         Log.d(TAG, mCalendar.getTime().toString());
     }
 
@@ -138,7 +138,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         mCalendar.set(Calendar.YEAR, year);
         mCalendar.set(Calendar.MONTH, monthOfYear);
         mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        mInputDueDate.setText(DateUtils.getFullDate(mCalendar.getTime()));
+        mInputDueDate.setText(DateUtils.getFullDate(this, mCalendar.getTime()));
         showTimePickerDialog();
     }
 
