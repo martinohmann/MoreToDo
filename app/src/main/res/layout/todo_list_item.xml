@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/todo_list_item"
@@ -8,108 +8,112 @@
     android:paddingBottom="10dp">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="0"
-        android:layout_column="0">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/colorTodoText"
-            android:text="@string/text_property_unknown"
-            android:id="@+id/title"
-            android:paddingBottom="5dp"
-            android:height="26dp"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:maxWidth="310sp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/content_icon"
-            android:maxWidth="18dp"
-            android:minWidth="18dp"
-            android:minHeight="18dp"
-            android:maxHeight="18dp"
-            android:src="@drawable/ic_attach_file_black_18dp"
-            android:contentDescription="@string/word_icon"
-            android:layout_toEndOf="@+id/title"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="2dp"
-            android:visibility="gone"
-            android:tint="@color/colorDefaultIconTint" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="1"
-        android:layout_column="0">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/container_date"
-            android:minWidth="110dp">
+            android:id="@+id/container_title"
+            android:paddingEnd="40dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/colorTodoText"
+                android:text="@string/text_property_unknown"
+                android:id="@+id/title"
+                android:paddingBottom="5dp"
+                android:height="26dp"
+                android:singleLine="true"
+                android:ellipsize="end" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/icon"
+                android:id="@+id/content_icon"
                 android:maxWidth="18dp"
                 android:minWidth="18dp"
                 android:minHeight="18dp"
                 android:maxHeight="18dp"
-                android:src="@drawable/ic_add_black_18dp"
+                android:src="@drawable/ic_attach_file_black_18dp"
                 android:contentDescription="@string/word_icon"
-                android:tint="@color/colorDefaultIconTint" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/colorTodoTextLight"
-                android:text="@string/text_property_unknown"
-                android:id="@+id/date"
-                android:layout_gravity="center_vertical"
-                android:layout_toEndOf="@+id/icon"
+                android:layout_toEndOf="@+id/title"
                 android:layout_marginStart="2dp"
-                android:paddingTop="1sp" />
-
+                android:layout_marginTop="2dp"
+                android:visibility="gone"
+                android:tint="@color/colorDefaultIconTint" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/container_due_date"
-            android:layout_toEndOf="@+id/container_date"
-            android:layout_marginStart="16dp">
+            android:layout_below="@+id/container_title">
 
-            <ImageView
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/due_date_icon"
-                android:maxWidth="18dp"
-                android:minWidth="18dp"
-                android:minHeight="18dp"
-                android:maxHeight="18dp"
-                android:src="@drawable/ic_schedule_black_18dp"
-                android:contentDescription="@string/word_icon"
-                android:tint="@color/colorDefaultIconTint" />
+                android:id="@+id/container_date"
+                android:minWidth="145dp">
 
-            <TextView
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/icon"
+                    android:maxWidth="18dp"
+                    android:minWidth="18dp"
+                    android:minHeight="18dp"
+                    android:maxHeight="18dp"
+                    android:src="@drawable/ic_add_black_18dp"
+                    android:contentDescription="@string/word_icon"
+                    android:tint="@color/colorDefaultIconTint" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/colorTodoTextLight"
+                    android:text="@string/text_property_unknown"
+                    android:id="@+id/date"
+                    android:layout_gravity="center_vertical"
+                    android:layout_toEndOf="@+id/icon"
+                    android:layout_marginStart="2dp"
+                    android:paddingTop="1sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/colorTodoTextLight"
-                android:text="@string/text_property_unknown"
-                android:id="@+id/due_date"
-                android:layout_gravity="center_vertical"
-                android:layout_toEndOf="@+id/due_date_icon"
-                android:layout_marginStart="2dp"
-                android:paddingTop="1sp" />
+                android:id="@+id/container_due_date"
+                android:layout_toEndOf="@+id/container_date"
+                android:layout_marginStart="16dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/due_date_icon"
+                    android:maxWidth="18dp"
+                    android:minWidth="18dp"
+                    android:minHeight="18dp"
+                    android:maxHeight="18dp"
+                    android:src="@drawable/ic_schedule_black_18dp"
+                    android:contentDescription="@string/word_icon"
+                    android:tint="@color/colorDefaultIconTint" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/colorTodoTextLight"
+                    android:text="@string/text_property_unknown"
+                    android:id="@+id/due_date"
+                    android:layout_gravity="center_vertical"
+                    android:layout_toEndOf="@+id/due_date_icon"
+                    android:layout_marginStart="2dp"
+                    android:paddingTop="1sp" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
 
@@ -120,9 +124,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/done"
         android:checked="false"
-        android:layout_row="0"
-        android:layout_column="1"
-        android:layout_gravity="center_vertical|end"
-        android:layout_rowSpan="2" />
+        android:layout_gravity="center_vertical|end" />
 
-</GridLayout>
+</FrameLayout>

@@ -14,7 +14,7 @@ import de.mohmann.moretodo.R;
  */
 final public class DateUtils {
 
-    final private static String SHORT_FORMAT = "yyyy-MM-dd  HH:mm";
+    final private static String SHORT_FORMAT = "MMM dd yyyy  HH:mm";
     final private static String LONG_FORMAT = "EEE, MMMM dd yyyy  HH:mm";
     final private static SimpleDateFormat SHORT_FORMATTER = new SimpleDateFormat(SHORT_FORMAT, Locale.US);
     final private static SimpleDateFormat LONG_FORMATTER = new SimpleDateFormat(LONG_FORMAT, Locale.US);
